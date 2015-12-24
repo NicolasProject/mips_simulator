@@ -1,8 +1,10 @@
 #include <stdio.h> 
 #include <stdlib.h>  
-#include "fonctions.h"
 #include <string.h>
 #include <stdint.h>
+
+#include "fonctions.h"
+
 
 
 int lireDonnees(char nomFichier[], char instructions[][TAILLE_MAX_INSTR]) {  
@@ -10,8 +12,8 @@ int lireDonnees(char nomFichier[], char instructions[][TAILLE_MAX_INSTR]) {
 	FILE * fic;  
 	int ligne=0;
 
-	/* Ouverture du fichier */  
-	fic = fopen(nomFichier, "r");  
+	/* Ouverture du fichier */
+	fic = fopen(nomFichier, "r");
 	if(fic == NULL) {   
 		perror("Probleme ouverture fichier ");   
 		exit(1);  
@@ -114,10 +116,17 @@ int instructionToHexa(char instruction[]){
   		
   	}
    
-   
 }
 
+/*void dispatchLines(char line[], )
+{
+
+}*/
 
 
+/*int instructionToHexaBis(char instruction[])
+{
+
+}*/
 
 

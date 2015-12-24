@@ -13,5 +13,6 @@ int main(int argc,char *argv[])
 	nbrInstructions = lireDonnees(argv[1],instructions);
 	//afficherTableau(instructions, nbrInstructions);
  	instructionToHexa(instructions[0]);
+
 	return 0;
 }
