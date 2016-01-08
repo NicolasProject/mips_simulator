@@ -1,18 +1,22 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "fonctions.h"
+#include<stdio.h>
+#include "../include/file_functions.h"
+#include "../include/instruction_mem.h"
+#include "../include/registers.h"
 
 
-int main(int argc,char *argv[])
+int main(int argc,char*args[])
 {
-	int nbrInstructions=0;
-	int i, j ;
-	char instructions[NB_INSTR_MAX][TAILLE_MAX_INSTR] ;
+	init_reg_file();		// Initialize the register file
+	label_num=0;
 	
-	nbrInstructions = lireDonnees(argv[1],instructions);
-	//afficherTableau(instructions, nbrInstructions);
- 	instructionToHexa(instructions[0]);
-
+	FILE*f;
+	f=fopen(args[1],"r");
+	struct instruct_mem *im=calloc(sizeof(struct instruct_mem),1);
+	struct data_mem *dm=calloc(sizeof(struct data_mem),1);
+	int len=read_file(f,im,dm);	// len stores the largest possible value of pc.
+	
+	fclose(f);
+	execute(im,len,dm);
+	
 	return 0;
 }
