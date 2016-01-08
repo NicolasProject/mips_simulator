@@ -1,6 +1,5 @@
 /* Contains the definitions of the functions used to read the MIPS code from a file */
 
-//yoyoy
 // TODO : Introduce string
 
 
