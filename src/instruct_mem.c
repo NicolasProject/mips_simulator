@@ -11,7 +11,7 @@ extern const int opcode[]={ADD,SUB,SLT,AND,OR,SYSCALL,BEQ,LW,SW,LI,MOVE,J};
 int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 {
 	char inst[10];		// Contient l'instruction (comme add,sub,move,b)
-	int j,i=0;
+	int j,i,k=0;
 	char*ptr;
 	
 	/****** Traitement particulier pour les labels ****************/
@@ -103,76 +103,33 @@ int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		char reg[3];  // chaine qui contiendra un nom de registre
 		int j;	
 	
-	
-		for(; input[i]==',' || input[i]==32 || input[i]=='$'; i++);		// On se rend au mot suivant qui sera le premier registre
-		
-		// Il peut être une valeur immediate ou un registre (si il est précedé de $ c'est un registre)
-		if(input[i-1]!='$')		// Valeur immédiate
-		{
-			int val=0;
-			// On récupère le nombre entier
-			for(; input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && input[i]!='#'; i++){
-				val=val*10+(input[i]-'0');
-			}
+		for(k=1; k<=3; k++){
 			
-			// Pour différencier valeur immédiate et registre on utilisera les nombres à partir de 32 pour les valeurs immédiate
-			// Les registres allant de 0 à 31
-			instr_encodee[1]=32+val;		// On ajoute alors la valeur à l'instruction encodée à l'indice 1
-		}
-		else	// Registre
-		{
-			for(j=0; input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && j<2 && input[i]!='#' && input[i]!=9; i++,j++)
-			{	
-				reg[j]=input[i];	//On récupère le nom du registre
+			for(; input[i]==',' || input[i]==32 || input[i]=='$'; i++);		// On se rend au mot suivant qui sera le premier registre
 			
-			}	
-			reg[j]='\x0';	// On ajoute le caractère de fin de chaine
-			instr_encodee[1]=reg_num(reg);	// On recupere son numéro gràace à la fonction reg_num et on l'ajoute à l'instruction encodée
-		}
-		
-		
-		
-		
-		for(; input[i]==',' || input[i]==32 || input[i]=='$' ; i++);		// On se rend au registre suivant
-		
-		// Il peut être une valeur immediate ou un registre (si il est précedé de $ c'est un registre)
-		
-		if(input[i-1]!='$')	// Valeur immédiate (entre 0 et 9)
-		{	
-			instr_encodee[2]=32+(input[i]-'0'); // On recupere directement la valeur et la place dans l'instruction encodée
-		}
-		
-		else	// Registre
-		{
-			for(j=0;input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && j<2 && input[i]!='#' && input[i]!=9;i++,j++)
-			{	
-				reg[j]=input[i];	// On récupere le nom du registre
-			}	
-			reg[j]='\x0';			// On ajoute le caractère de fin de chaine
-			instr_encodee[2]=reg_num(reg);	// On recupere son numéro gràce à la fonction reg_num et on l'ajoute à l'instruction encodée
-		}
-		
-		
-		
-		
-		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// On se rend au registre suivant
-		
-		// Il peut être une valeur immediate ou un registre (si il est précedé de $ c'est un registre)
-		
-		if(input[i-1]!='$') // Valeur immédiate (entre 0 et 9)
-		{
-			instr_encodee[3]=32+(input[i]-'0');	// On recupere directement la valeur et la place dans l'instruction encodée
-		}
-		
-		else	// Registre
-		{
-			for(j=0;input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && j<2 && input[i]!='#' && input[i]!=9;i++,j++)
-			{	
-				reg[j]=input[i];	// On récupere le nom du registre
+			// Il peut être une valeur immediate ou un registre (si il est précedé de $ c'est un registre)
+			if(input[i-1]!='$')		// Valeur immédiate
+			{
+				int val=0;
+				// On récupère le nombre entier
+				for(; input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && input[i]!='#'; i++){
+					val=val*10+(input[i]-'0');
+				}
 				
-			}	
-			reg[j]='\x0';				// On ajoute le caractère de fin de chaine
-			instr_encodee[3]=reg_num(reg);	// On recupere son numéro gràce à la fonction reg_num et on l'ajoute à l'instruction encodée
+				// Pour différencier valeur immédiate et registre on utilisera les nombres à partir de 32 pour les valeurs immédiate
+				// Les registres allant de 0 à 31
+				instr_encodee[k]=32+val;		// On ajoute alors la valeur à l'instruction encodée à l'indice 1
+			}
+			else	// Registre
+			{
+				for(j=0; input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && j<2 && input[i]!='#' && input[i]!=9; i++,j++)
+				{	
+					reg[j]=input[i];	//On récupère le nom du registre
+				
+				}	
+				reg[j]='\x0';	// On ajoute le caractère de fin de chaine
+				instr_encodee[k]=reg_num(reg);	// On recupere son numéro gràace à la fonction reg_num et on l'ajoute à l'instruction encodée
+			}
 		}
 		
 		//printf ("%d %d %d %d",instr_encodee[0],instr_encodee[1],instr_encodee[2],instr_encodee[3]);	 
