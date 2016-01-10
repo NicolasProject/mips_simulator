@@ -136,7 +136,7 @@ int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	}
 	
 	
-	/******************** DEALING WITH Load Immediate *****************/
+	/******************** Traitement type I *****************/
 	else if(instr_encodee[0]==LI)
 	{
 		char reg[3];
