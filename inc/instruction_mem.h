@@ -54,20 +54,20 @@ int label_num;
 
 /********* FUNCTIONS TO ENCODE-DECODE THE INSTRUCTION ************/
 
-int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num);	 //Function to convert text into opcodes.
-void decode(int*encoded_inst,struct data_mem*dm);	// Decode and perform the instructions.
+int* encode(char *input, int *instr_encodee, struct data_mem *dm, int num);	 //Function to convert text into opcodes.
+void decode(int *encoded_inst, struct data_mem *dm);	// Decode and perform the instructions.
 
 /*****************************************************************/
 
 
 /********** FUNCTIONS TO LOAD & EXECUTE THE INSTRUCTIONS *********/
 
-void load_instruct_mem(struct instruct_mem*im,int mem_pos,int*instruct);  //Function to load the instruction into the instruction memory. 
-void execute(struct instruct_mem*im,int fin,struct data_mem*dm);
+void load_instruct_mem(struct instruct_mem *im, int mem_pos, int *instruct);  //Function to load the instruction into the instruction memory. 
+void execute(struct instruct_mem *im, int fin, struct data_mem *dm);
 
 /*****************************************************************/
 
-int label_pos(char*name);			// Returns the index of the label structure storing the label-name
+int label_pos(char *name);			// Returns the index of the label structure storing the label-name
 
 // conversion instruction (instr_encodee) to hexa
 uint32_t instrToHexa(int *instr_encodee);

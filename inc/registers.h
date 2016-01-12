@@ -19,7 +19,7 @@ extern struct reg reg_file[32];
 
 
 void init_reg_file();	   // To initialise the register file (This is has to be called before the first reference to registers)
-int reg_num(char*alt_name);	// Returns the number of the register given the alternate name.
+int reg_num(char *alt_name);	// Returns the number of the register given the alternate name.
 
 #endif 	// End of file
 

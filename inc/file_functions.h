@@ -10,7 +10,7 @@
 #include "instruction_mem.h"
 #include "data_mem.h"
 
-int read_file(FILE *file,struct instruct_mem *im,struct data_mem *dm);   //Reads the file and includes the necessary instructions into the Instruction Memory
+int read_file(FILE *file, struct instruct_mem *im, struct data_mem *dm);   //Reads the file and includes the necessary instructions into the Instruction Memory
 					   //in the encoded form.
 
 void intToBin(uint32_t input, char *bin);
