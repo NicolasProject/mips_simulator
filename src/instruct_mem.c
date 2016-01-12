@@ -128,7 +128,7 @@ int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 				
 				}	
 				reg[j]='\x0';	// On ajoute le caractère de fin de chaine
-				instr_encodee[k]=reg_num(reg);	// On recupere son numéro gràace à la fonction reg_num et on l'ajoute à l'instruction encodée
+				instr_encodee[k]=reg_num(reg);	// On recupere son numéro grâce à la fonction reg_num et on l'ajoute à l'instruction encodée
 			}
 		}
 		
@@ -281,7 +281,7 @@ int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		for(j=0;input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && input[i]!='#' && input[i]!=9;i++,j++)
 		{
 			label[j]=input[i];
-		}	
+		}
 		label[j]='\x0';				// Add NULL character to terminate string
 		
 		instr_encodee[1]=label_pos(label);
@@ -289,8 +289,23 @@ int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	
 	}
 	
+	// convert intruction to hexa and write it in a file
+	FILE hexaFile = NULL;
+	hexaFile = fopen("hexa.txt", "a");
+	if(hexaFile != NULL)
+	{
+		char binaryStr[32] = "";
+		
+		intToBin(instrToHexa(instr_encodee), binaryStr);
+		fprintf(hexaFile, "%s\n", binaryStr);
+	}
+	else
+	{
+		printf("Error opening file hexa.txt !");
+	}
+	
 	/**********************************************************************************/
-	return instr_encodee;	
+	return instr_encodee;
 }	
 
 
@@ -388,4 +403,67 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm)
 		decode(im->mem[pc].cod,dm);	
 		//scanf("%c",&a);
 	}
+}
+
+uint32_t instrToHexa(int *instr_encodee);
+{
+	uint32_t hexa = 0;
+	
+	// set special (6 first bits)
+	switch(instr_encodee[0])
+	{
+		// R-Type
+		case ADD :
+		case AND :
+		case SUB :
+		case SLT :
+		case OR  :
+			hexa = 0;
+			hexa |= ((int)instr_encodee[1]) << 11;
+			hexa |= ((int)instr_encodee[2]) << 21;
+			hexa |= ((int)instr_encodee[3]) << 16;
+			break;
+		
+		/*case SW :
+			hexa |= ((int)0b101011) << 26;
+			break;*/
+			
+		/*case LW :
+			hexa |= ((int)0b100011) << 26;
+			break;*/
+			
+		/*case J :
+			hexa |= ((int)0b000010) << 26;
+			break;*/
+			
+		/*case BEQ  :
+			hexa |= ((int)0b000100) << 26;
+			break;*/
+	}
+	
+	switch(instr_encodee[0])
+	{
+		// R-Type
+		case ADD :
+			hexa |= 0b100000;
+			break;
+			
+		case AND :
+			hexa |= 0b100100;
+			break;
+			
+		case SUB :
+			hexa |= 0b100010;
+			break;
+			
+		case SLT :
+			hexa |= 0b101010;
+			break;
+			
+		case OR  :
+			hexa |= 0b100101;
+			break;
+	}
+	
+	return hexa;
 }
