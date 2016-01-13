@@ -2,10 +2,6 @@
 #define INSTRUCTION_MEM_H_INCLUDED
 
 
-/* File contains the declarations of the functions and the struct of the instruction memory. 
- * The instruction memory is fed the instructions in the encoded format using functions in
- * 'file_functions.h'. 
- */
  
 #include <stdio.h>
 #include <string.h>
@@ -15,7 +11,7 @@
 #include "operations.h"
 #include "pc.h"
 
-// Defining opcodes
+// opcodes
 #define ADD 0b100000		//ADD   => 32
 #define SUB 0b100010		//SUB   => 34
 #define AND 0b100100		//AND   => 36
@@ -52,24 +48,16 @@ struct label_table
 }labels;
 int label_num;
 
-/********* FUNCTIONS TO ENCODE-DECODE THE INSTRUCTION ************/
 
-int* encode(char *input, int *instr_encodee, struct data_mem *dm, int num);	 //Function to convert text into opcodes.
-void decode(int *encoded_inst, struct data_mem *dm);	// Decode and perform the instructions.
+int* encode(char *input, int *instr_encodee, struct data_mem *dm, int num);	 
+void decode(int *encoded_inst, struct data_mem *dm);	
 
-/*****************************************************************/
-
-
-/********** FUNCTIONS TO LOAD & EXECUTE THE INSTRUCTIONS *********/
-
-void load_instruct_mem(struct instruct_mem *im, int mem_pos, int *instruct);  //Function to load the instruction into the instruction memory. 
+void load_instruct_mem(struct instruct_mem *im, int mem_pos, int *instruct); 
 void execute(struct instruct_mem *im, int fin, struct data_mem *dm);
 
-/*****************************************************************/
-
-int label_pos(char *name);			// Returns the index of the label structure storing the label-name
+int label_pos(char *name);	
 
 // conversion instruction (instr_encodee) to hexa
 uint32_t instrToHexa(int *instr_encodee);
 
- #endif //End of file
+ #endif 
