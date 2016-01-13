@@ -294,7 +294,7 @@ int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	hexaFile = fopen("hexa.txt", "a");
 	if(hexaFile != NULL)
 	{
-		char binaryStr[32] = "";
+		char binaryStr[33] = "";
 		
 		intToBin(instrToHexa(instr_encodee), binaryStr);
 		fprintf(hexaFile, "%s\n", binaryStr);
