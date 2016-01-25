@@ -49,6 +49,7 @@ int main(int argc,char*args[])
 						read_file(fichier, im, dm);
 						fclose(fichier);
 						execute(im,1,dm);
+						afficher_registres();
 					}
 					else{
 						printf("problème lors de l'ouverture du fichier en lecture");
