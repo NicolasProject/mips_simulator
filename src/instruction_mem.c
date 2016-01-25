@@ -1,7 +1,7 @@
 
 // Encodage et décodage des instructions. 
 
-#include "../include/instruction_mem.h"
+#include "instruction_mem.h"
 
 
 //Definition des opcodes 
@@ -11,7 +11,7 @@ extern const int opcode[]={ADD,SUB,SLT,AND,OR,SYSCALL,BEQ,LW,SW,LI,MOVE,J};
 int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 {
 	char inst[10];		// Contient l'instruction (comme add,sub,move,b)
-	int j,i,k=0;
+	int j=0,i=0,k=0;
 	char*ptr;
 	
 	/****** Traitement particulier pour les labels ****************/
@@ -290,7 +290,7 @@ int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	}
 	
 	// convert intruction to hexa and write it in a file
-	FILE hexaFile = NULL;
+	FILE* hexaFile = NULL;
 	hexaFile = fopen("hexa.txt", "a");
 	if(hexaFile != NULL)
 	{
@@ -405,7 +405,7 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm)
 	}
 }
 
-uint32_t instrToHexa(int *instr_encodee);
+uint32_t instrToHexa(int *instr_encodee)
 {
 	uint32_t hexa = 0;
 	

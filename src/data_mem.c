@@ -1,6 +1,6 @@
 /* This file defines the functions to handle store/retrieve operations on data memory */
 
-#include "../include/data_mem.h"
+#include "data_mem.h"
 
 void store(int pos,struct data_mem *dm,char*var_name,int val)
 {

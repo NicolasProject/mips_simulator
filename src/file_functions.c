@@ -3,7 +3,7 @@
 // TODO : Introduce string
 
 
-#include "../include/file_functions.h"
+#include "file_functions.h"
 #include <string.h>
 
 int first_char(char*line)
@@ -32,7 +32,8 @@ int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
 	// This function uses 'encode_to_opcode' function from the instruction_mem library.
 	// This function also allocates space for the variables declared in the .data segment of the memory
 	
-	char line[100],temp[100];
+	char line[100] = "";
+	char temp[100] = "";
 	int i,k,j,line_num,val,dm_pos;
 	line_num=i=k=j=dm_pos=0;
 	
@@ -51,7 +52,7 @@ int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
 		
 	
 		for(j=0;line[i]!='#' && line[i]!='\x0' && line[i]!='\n'; i++,j++){
-			temp[j]=line[i]
+			temp[j]=line[i];
 		}
 		temp[j]='\x0';
 		

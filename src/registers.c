@@ -1,4 +1,4 @@
-#include "../include/registers.h"
+#include "registers.h"
 // TODO Complete the register file 
 
 struct reg reg_file[32];
