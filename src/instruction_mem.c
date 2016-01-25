@@ -322,48 +322,48 @@ void load_instruct_mem(struct instruct_mem*im,int mem_pos,int*instruct)
 
 
 
-void decode(int*eninstr_encodee_inst,struct data_mem*dm)
+void decode(int*instr_encodee_inst,struct data_mem*dm)
 {
-	//printf("%d %d %d %d\n",eninstr_encodee_inst[0],eninstr_encodee_inst[1],eninstr_encodee_inst[2],eninstr_encodee_inst[3]);
-	switch(eninstr_encodee_inst[0])
+	printf("(decode) %d %d %d %d\n",instr_encodee_inst[0],instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
+	switch(instr_encodee_inst[0])
 	{
 		case ADD :	
-				add(eninstr_encodee_inst[1],eninstr_encodee_inst[2],eninstr_encodee_inst[3]);
+				add(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
 		case SUB :
-				sub(eninstr_encodee_inst[1],eninstr_encodee_inst[2],eninstr_encodee_inst[3]);
+				sub(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
 		case AND :
-				and_(eninstr_encodee_inst[1],eninstr_encodee_inst[2],eninstr_encodee_inst[3]);
+				and_(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
 		case OR  :
-				or_(eninstr_encodee_inst[1],eninstr_encodee_inst[2],eninstr_encodee_inst[3]);
+				or_(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;		
 		case SLT :
-				slt(eninstr_encodee_inst[1],eninstr_encodee_inst[2],eninstr_encodee_inst[3]);	
+				slt(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);	
 				break;
 		
-		case LI	 : 	li(eninstr_encodee_inst[1],eninstr_encodee_inst[2]);
+		case LI	 : 	
+				li(instr_encodee_inst[1],instr_encodee_inst[2]);
 				break; 
 		
 		case SYSCALL : 
 				syscall();
 				break;
 		case MOVE :
-				move(eninstr_encodee_inst[1],eninstr_encodee_inst[2]);
+				move(instr_encodee_inst[1],instr_encodee_inst[2]);
 				break;
 		case LW   :
-				load_word(eninstr_encodee_inst[1],eninstr_encodee_inst[2],dm);
+				load_word(instr_encodee_inst[1],instr_encodee_inst[2],dm);
 				break;
 		case SW   :
-				store_word(eninstr_encodee_inst[1],eninstr_encodee_inst[2],dm);
+				store_word(instr_encodee_inst[1],instr_encodee_inst[2],dm);
 				break;
 		case J	  :	
-				jump(eninstr_encodee_inst[1]);
+				jump(instr_encodee_inst[1]);
 				break;
 		case BEQ  :
-		
-				beq(eninstr_encodee_inst[1],eninstr_encodee_inst[2],eninstr_encodee_inst[3]);
+				beq(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
 				
 		default   :	printf("Unknown instruction");
