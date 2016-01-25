@@ -10,7 +10,7 @@ int main(int argc,char*args[])
 	init_reg_file();		// Initialize the register file
 	label_num=0;
 	int sortieBoucle = 0;
-	char chaine[50];
+	char chaine[50]= "";
 	
 	FILE* fichier =NULL;
 	int len = 0;
@@ -31,26 +31,34 @@ int main(int argc,char*args[])
 	}
 	else{
 		do{
-			fichier = fopen("./mode_interactif.txt","w+");
+			fichier = fopen("./mode_interactif.txt","w");
 			if(fichier != NULL){
 				printf("entrez une instruction :\n");
-				scanf("%s", chaine);
-				printf("%s\n", chaine);
+				fgets(chaine, sizeof(chaine), stdin);
 				
-				if(strcmp(chaine,"EXIT")==0){
+				if(strcmp(chaine,"EXIT\n")==0){
 					sortieBoucle = 1;
 				}
 				else{
 					fprintf(fichier, "%s", chaine);
 					fflush(fichier);
-					read_file(fichier, im, dm);
+					fclose(fichier);
+					
+					fichier = fopen("./mode_interactif.txt","r");
+					if(fichier != NULL){
+						read_file(fichier, im, dm);
+						fclose(fichier);
+						execute(im,1,dm);
+					}
+					else{
+						printf("problème lors de l'ouverture du fichier en lecture");
+					}
 				}
 			}
 			else{
-				printf("problème lors de l'ouverture du fichier");
+				printf("problème lors de l'ouverture du fichier en écriture");
 			}
-			fclose(fichier);
-			execute(im,1,dm);
+			
 		}while(sortieBoucle ==0);
 	}
 	
