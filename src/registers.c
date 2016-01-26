@@ -78,7 +78,7 @@ int reg_num(char*alt_name)
 
 void afficher_registres(){
 	int i;
-	printf("	ETAT DES REGISTRES	\n\n");
+	printf("ETAT DES REGISTRES	\n\n");
 	for(i=0; i<32; i++){
 		printf("registre : %s	valeur : %d\n" ,reg_file[i].alt_name, reg_file[i].val);
 	}

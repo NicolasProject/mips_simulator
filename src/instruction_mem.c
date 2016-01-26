@@ -408,6 +408,7 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	while(pc<=fin)
 	{
 		//printf("pc=%d\n",pc);
+		printf("Instruction %i : %s\n",pc, im->mem[pc].c);
 		decode(im->mem[pc].cod,dm);	
 		
 		afficher_registres();
