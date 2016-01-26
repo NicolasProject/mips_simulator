@@ -5,18 +5,19 @@
 
 
 //Definition des opcodes 
-extern const char funct[][8]={"add","sub","slt","and","or","syscall","beq","lw","sw","li","move","j"};
-extern const int opcode[]={ADD,SUB,SLT,AND,OR,SYSCALL,BEQ,LW,SW,LI,MOVE,J};
+static const char funct[][8]={"add","sub","slt","and","or","syscall","beq","lw","sw","li","move","j"};
+static const int opcode[]={ADD,SUB,SLT,AND,OR,SYSCALL,BEQ,LW,SW,LI,MOVE,J};
 
-int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
+void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 {
 	char inst[10];		// Contient l'instruction (comme add,sub,move,b)
 	int j=0,i=0,k=0;
 	char*ptr;
+	int memLocationIdx;
 	
 	/****** Traitement particulier pour les labels ****************/
 			
-	if(ptr=strchr(input,':'))
+	if( (ptr = strchr(input,':')) != 0 )
 	{
 		// Pour les labels, on met instr_encodee[0]=0 (this way it is not loaded into the instruction memory if this value doesn't change)
 		instr_encodee[0]=0;
@@ -192,7 +193,14 @@ int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		var_name[j]='\x0';
 		
 		// Store the mem_location (in data memory)
-		instr_encodee[2]=get_mem_location(var_name,dm);
+		if((memLocationIdx = get_mem_location(var_name,dm)) != -1)
+		{
+			instr_encodee[2] = memLocationIdx;
+		}
+		else
+		{
+			printf ("Error on getting memory location !");
+		}
 		
 		//printf ("%d %d %d",instr_encodee[0],instr_encodee[1],instr_encodee[2]);
 	}
@@ -310,8 +318,6 @@ int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		printf("Error opening file hexa.txt !");
 	}
 	
-	
-	return instr_encodee;
 }	
 
 

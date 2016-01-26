@@ -24,6 +24,8 @@ void store_word(int dest,int addr,struct data_mem*dm);
 // Branch & Jump instructions
 void jump(int num);
 
+void beq(int reg1,int reg2,int pc_dest);
+
 
 // Syscall
 void syscall();

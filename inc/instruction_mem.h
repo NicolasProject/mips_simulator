@@ -53,7 +53,7 @@ struct label_table
 int label_num;
 
 
-int* encode(char *input, int *instr_encodee, struct data_mem *dm, int num);	 
+void encode(char *input, int *instr_encodee, struct data_mem *dm, int num);	 
 void decode(int *encoded_inst, struct data_mem *dm);	
 
 void load_instruct_mem(struct instruct_mem *im, int mem_pos, int *instruct); 

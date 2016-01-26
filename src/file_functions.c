@@ -34,8 +34,11 @@ int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
 	
 	char line[100] = "";
 	char temp[100] = "";
-	int i,k,j,line_num,val,dm_pos;
-	line_num=i=k=j=dm_pos=0;
+	int i, k, j, line_num;
+	line_num = 0;
+	i = 0;
+	k = 0;
+	j = 0;
 	
 	while(!feof(file))
 	{	
