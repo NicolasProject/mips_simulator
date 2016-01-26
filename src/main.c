@@ -10,7 +10,7 @@ int main(int argc,char*args[])
 	init_reg_file();		// Initialize the register file
 	label_num=0;
 	int sortieBoucle = 0;
-	char chaine[50]= "";
+	char chaine[99]= "";
 	
 	FILE* fichier =NULL;
 	int len = 0;

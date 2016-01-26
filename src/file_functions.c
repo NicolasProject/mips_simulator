@@ -69,9 +69,8 @@ int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
 		
 		if(coded[0])
 		{	
-			//printf("Loaded : %s",temp);
 			//printf("\n%d %d %d %d",coded[0],coded[1],coded[2],coded[3]);
-			load_instruct_mem(im,k,coded);
+			load_instruct_mem(im,k,coded,temp);
 			k++;
 			//printf("\n%d %d %d %d ",im->mem[k].cod[0],im->mem[k].cod[1],im->mem[k].cod[2],im->mem[k].cod[3]);
 			//printf("k=%d\n",j);
