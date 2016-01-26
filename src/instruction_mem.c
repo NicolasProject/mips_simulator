@@ -402,15 +402,15 @@ int label_pos(char*name)
 void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pas)
 {
 	pc = 0;			// Starts with the program counter at zero
-	char a;
 	while(pc<=fin)
 	{
-		printf("pc=%d\n",pc);
+		//printf("pc=%d\n",pc);
 		decode(im->mem[pc].cod,dm);	
 		
+		
 		afficher_registres();
-		if(modePas_A_Pas == 1){
-			printf("\nPour executer l'instruction suivant appuyez sur une touche\n");
+		if((modePas_A_Pas == 1) && (pc<=fin)){
+			printf("\nPour executer l'instruction suivant appuyez sur la touche entree \n");
 			getchar();
 		}
 		//scanf("%c",&a);

@@ -23,7 +23,7 @@ int main(int argc,char*args[])
 		if(fichier != NULL){
 			len = read_file(fichier, im, dm);	// len stores the largest possible value of pc.
 			fclose(fichier);
-			execute(im,len,dm,0);
+			execute(im,len-1,dm,0);
 		}
 		else{
 			printf("problème lors de l'ouverture du fichier");
@@ -31,7 +31,15 @@ int main(int argc,char*args[])
 	}
 	
 	else if((argc == 3) && !strcmp(args[2],"-pas")){	// mode fichier pas a pas
-		printf("mode pas à pas");
+		fichier = fopen(args[1],"r");
+		if(fichier != NULL){
+			len = read_file(fichier, im, dm);	// len stores the largest possible value of pc.
+			fclose(fichier);
+			execute(im,len-1,dm,1);
+		}
+		else{
+			printf("problème lors de l'ouverture du fichier");
+		}
 	}
 	
 	else if(argc == 1){		// mode interactif
@@ -54,7 +62,6 @@ int main(int argc,char*args[])
 						read_file(fichier, im, dm);
 						fclose(fichier);
 						execute(im,0,dm,0);
-						afficher_registres();
 					}
 					else{
 						printf("problème lors de l'ouverture du fichier en lecture");
