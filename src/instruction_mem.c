@@ -294,17 +294,23 @@ int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	hexaFile = fopen("hexa.txt", "a");
 	if(hexaFile != NULL)
 	{
-		char binaryStr[33] = "";
+		char hexaStr[9];
 		
-		intToBin(instrToHexa(instr_encodee), binaryStr);
-		fprintf(hexaFile, "%s\n", binaryStr);
+		convDecToHex(instrCode(instr_encodee), hexaStr);
+		fprintf(hexaFile, "%s\n", hexaStr);
+		
+		// close file
+		if(fclose(hexaFile) == EOF)
+		{
+			printf("Error closing file hexa.txt !");
+		}
 	}
 	else
 	{
 		printf("Error opening file hexa.txt !");
 	}
 	
-	/**********************************************************************************/
+	
 	return instr_encodee;
 }	
 
@@ -405,7 +411,7 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm)
 	}
 }
 
-uint32_t instrToHexa(int *instr_encodee)
+uint32_t instrCode(int *instr_encodee)
 {
 	uint32_t hexa = 0;
 	
@@ -466,4 +472,31 @@ uint32_t instrToHexa(int *instr_encodee)
 	}
 	
 	return hexa;
+}
+
+void convDecToHex(int decimal, char *hexa)
+{
+    int value, i = 0;
+    char car[] = "0123456789ABCDEF";
+
+    hexa[0] = '\0';
+    // le digit de poids faible a l'indice le plus eleve (situe juste avant '\0')
+    do
+    {
+        value = decimal % 16;
+        decimal /= 16;
+
+        // on ajoute la valeur a la chaine hexa
+        hexa[i+1] = hexa[i];
+        hexa[i] = car[value];
+
+        i++;
+    }while(decimal > 0);
+}
+
+// finalement non utilise car les instructions contiennent 8 caracteres hexa
+int getSizeHexaStrFromDec(int decimal)
+{
+    // (log (base 16) decimal) + 1 + 1 (caractere fin de chaine)
+    return log(decimal) / log(16) + 2;
 }
