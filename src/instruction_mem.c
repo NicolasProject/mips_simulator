@@ -306,9 +306,12 @@ void load_instruct_mem(struct instruct_mem* im,int mem_pos,int* instruct, char* 
 	strcpy( im->mem[mem_pos].c, instruction);
 	
 	int j=0;
-	for(j=0;j<4;j++){
+	for(j=0; j<4; j++){
 		im->mem[mem_pos].cod[j]=instruct[j];
 	}
+	
+	// store encoded instruction in memory
+	convDecToHex(instrCode(instruct), im->mem[mem_pos].hexaStr, HEXA_INST_SIZE);
 	
 	//printf("\n%d %d %d %d ",im->mem[mem_pos].cod[0],im->mem[mem_pos].cod[1],im->mem[mem_pos].cod[2],im->mem[mem_pos].cod[3]);
 }
@@ -392,7 +395,8 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	while(pc<=fin)
 	{
 		//printf("pc=%d\n",pc);
-		printf("Instruction %i : %s\n",pc, im->mem[pc].c);
+		printf("Instruction %i : %s (hexa: %s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);
+		printf("instruct dec : %d", instrCode(im->mem[pc].cod));
 		decode(im->mem[pc].cod,dm);	
 		
 		afficher_registres();
@@ -467,12 +471,13 @@ uint32_t instrCode(int *instr_encodee)
 	return hexa;
 }
 
-void convDecToHex(int decimal, char *hexa)
+void convDecToHex(int decimal, char *hexa, int size)
 {
-    int value, i = 0;
+    int value, i = size -2;
     char car[] = "0123456789ABCDEF";
 
-    hexa[0] = '\0';
+	
+	hexa[size-1] = '\0';
     // le digit de poids faible a l'indice le plus eleve (situe juste avant '\0')
     do
     {
@@ -480,11 +485,22 @@ void convDecToHex(int decimal, char *hexa)
         decimal /= 16;
 
         // on ajoute la valeur a la chaine hexa
-        hexa[i+1] = hexa[i];
         hexa[i] = car[value];
 
-        i++;
-    }while(decimal > 0);
+        i--;
+    }while(decimal > 0 && i >= 0);
+    
+    if(i < 0)
+    {
+    	// ne doit normalement jamais arriver
+    	printf("Erreur de taille d'instruction lors de la conversion hexa !\n");
+    }
+    
+    // on complete par des zeros
+    for(; i >= 0; i--)
+    {
+    	hexa[i] = '0';
+    }
 }
 
 // finalement non utilise car les instructions contiennent 8 caracteres hexa

@@ -40,8 +40,6 @@ int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
 	k = 0;
 	j = 0;
 	
-	FILE* createHexaFile(char filename[]);
-	
 	while(!feof(file))
 	{	
 		line_num++;
@@ -82,51 +80,5 @@ int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
 	}
 	
 	return k;
+	
 }
-
-FILE* createHexaFile(char filename[], struct instruct_mem *im, int instNumber)
-{
-	FILE *file = NULL;
-	int i;
-	int inst_encodee[4];
-	char hexaStr[9];
-	
-	
-	if( (file = fopen(filename, 'w+')) == NULL)
-	{
-		printf("Can't create hexa file !\n");
-	}
-	else if(im != NULL)
-	{
-		for(i = 0; i < instNumber; i++)
-		{
-			// get encoded instruction
-			inst_encodee = im->mem[mem_pos].cod;
-		
-			convDecToHex(instrCode(inst_encodee), hexaStr);
-			fprintf(file, "%s\n", hexaStr);
-		}
-		
-		fflush(file);
-	}
-	
-	
-	return file;
-}
-
-void closeHexaFile(FILE* file)
-{
-	if(file != NULL)
-	{
-		if (fclose(file) != 0)
-		{
-			printf("Error closing hexa file !\n");
-		}
-		else
-		{
-			file = NULL;
-		}
-	}
-}
-
-

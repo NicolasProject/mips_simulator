@@ -29,11 +29,15 @@
 // instruction memory size
 #define INST_MEM_SIZE 1024
 
+// size of hexa instruction
+#define HEXA_INST_SIZE 9
+
 
 struct instruct_mem_element
 {
 	int cod[4];
 	char c[99];
+	char hexaStr[HEXA_INST_SIZE];
 };
 
 
@@ -64,7 +68,7 @@ int label_pos(char *name);
 // conversion instruction (instr_encodee) to hexa
 uint32_t instrCode(int *instr_encodee);
 // Converti une valeur decimal en hexadecimal
-void convDecToHex(int decimal, char *hexa);
+void convDecToHex(int decimal, char *hexa, int size);
 /**
  * retourne la taille necessaire d'une chaine de caractere
  * pour contenir la valeur en hexadecimal de 'decimal'
