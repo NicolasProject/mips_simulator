@@ -48,7 +48,7 @@ int main(int argc,char*args[])
 					if(fichier != NULL){
 						read_file(fichier, im, dm);
 						fclose(fichier);
-						execute(im,1,dm);
+						execute(im,0,dm);
 						afficher_registres();
 					}
 					else{
