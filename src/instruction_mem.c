@@ -316,12 +316,15 @@ int* encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 
 
 
-void load_instruct_mem(struct instruct_mem*im,int mem_pos,int*instruct)
+void load_instruct_mem(struct instruct_mem* im,int mem_pos,int* instruct, char* instruction)
 {
 	//printf("\ninside_load_inst :%d %d %d %d",instruct[0],instruct[1],instruct[2],instruct[3]);
+	strcpy( im->mem[mem_pos].c, instruction);
+	
 	int j=0;
-	for(j=0;j<4;j++)
+	for(j=0;j<4;j++){
 		im->mem[mem_pos].cod[j]=instruct[j];
+	}
 	
 	//printf("\n%d %d %d %d ",im->mem[mem_pos].cod[0],im->mem[mem_pos].cod[1],im->mem[mem_pos].cod[2],im->mem[mem_pos].cod[3]);
 }
@@ -407,10 +410,9 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 		//printf("pc=%d\n",pc);
 		decode(im->mem[pc].cod,dm);	
 		
-		
 		afficher_registres();
 		if((modePas_A_Pas == 1) && (pc<=fin)){
-			printf("\nPour executer l'instruction suivant appuyez sur la touche entree \n");
+			printf("\nPour executer l'instruction suivante appuyez sur la touche entree \n");
 			getchar();
 		}
 		//scanf("%c",&a);
