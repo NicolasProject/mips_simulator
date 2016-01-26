@@ -2,3 +2,4 @@ bin/
 obj/
 *.exe
 mips_simulator_vs/
+*.txt

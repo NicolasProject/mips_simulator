@@ -80,22 +80,4 @@ int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
 	return k;
 }
 
-void intToBin(uint32_t input, char *bin)
-{
-	int i = 0;
-	uint32_t bit = 1;
-	
-	for(i = 32; i >= 1; i--)
-	{
-		if((input & (bit << i-1)) == 0)
-		{
-			bin[i] = '1';
-		}
-		else
-		{
-			bin[i] = '0';
-		} 
-	}
-}
-
 

@@ -4,7 +4,7 @@
 
 void store(int pos,struct data_mem *dm,char*var_name,int val)
 {
-	if(pos>=1024)
+	if(pos >= MEM_INST_SIZE)
 	{
 		printf("Not enough space");
 		exit(2);				// exit code 2 => not enough space.
@@ -17,10 +17,10 @@ void store(int pos,struct data_mem *dm,char*var_name,int val)
 	return;
 }
 
-int get_mem_location(char*var_name,struct data_mem *dm)
+int get_mem_location(char *var_name, struct data_mem *dm)
 {
 	int i;
-	for(i=0;i<1024;i++)
+	for(i = 0; i < MEM_INST_SIZE; i++)
 	{
 		if(!strcmp(var_name,dm->mem[i].var_name))
 			return i;

@@ -7,7 +7,7 @@ BUILDDIR := obj
 TARGETDIR := bin
 
 # c compiler flags
-CFLAGS := 
+CFLAGS := -Wall
 # c++ compiler flags
 CXXFLAGS := 
 
