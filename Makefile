@@ -12,7 +12,7 @@ CFLAGS := -Wall
 CXXFLAGS := 
 
 # ----------------------- DO NOT MODIFY BELOW --------------------------
-LIB := 
+LIB := -lm
 
 ifeq ($(CC), gcc)
 	FLAGS := $(CFLAGS)
@@ -40,7 +40,7 @@ $(PATH_TARGET): $(OBJECTS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
-	@echo " $(CC) $(FLAGS) $(INC) -c -o $@ $<"; $(CC) $(FLAGS) $(INC) -c -o $@ $<
+	@echo " $(CC) $(FLAGS) $(INC) -c -o $@ $< $(LIB)"; $(CC) $(FLAGS) $(INC) -c -o $@ $< $(LIB)
 
 clean:
 	@echo " Cleaning..."; 
