@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// data memory size
+#define DATA_MEM_SIZE 1024
+
 struct data_mem
 {
 	struct data_mem_element
@@ -14,7 +17,7 @@ struct data_mem
 		char var_name[20];
 		int val;
 	
-	}                                                                                                                                                                                                                                                                                                                                          mem[1024]; 
+	}mem[DATA_MEM_SIZE];
 };
 
 

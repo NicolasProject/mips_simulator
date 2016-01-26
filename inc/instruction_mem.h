@@ -26,8 +26,8 @@
 #define BEQ 	0b000100	//BEQ   => 4		
 #define MOVE 	0b000110	//MOVE  => 6
 
-// memory instruction size
-#define MEM_INST_SIZE 1024
+// instruction memory size
+#define INST_MEM_SIZE 1024
 
 
 struct instruct_mem_element
@@ -39,7 +39,7 @@ struct instruct_mem_element
 
 struct instruct_mem
 {
-	struct instruct_mem_element mem[MEM_INST_SIZE];
+	struct instruct_mem_element mem[INST_MEM_SIZE];
 	
 };
 

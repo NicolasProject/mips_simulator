@@ -498,5 +498,5 @@ void convDecToHex(int decimal, char *hexa)
 int getSizeHexaStrFromDec(int decimal)
 {
     // (log (base 16) decimal) + 1 + 1 (caractere fin de chaine)
-    return log(decimal) / log(16) + 2;
+    return (log(decimal) / log(16) + 2);
 }
