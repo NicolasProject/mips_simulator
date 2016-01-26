@@ -330,7 +330,7 @@ void load_instruct_mem(struct instruct_mem*im,int mem_pos,int*instruct)
 
 void decode(int*instr_encodee_inst,struct data_mem*dm)
 {
-	printf("(decode) %d %d %d %d\n",instr_encodee_inst[0],instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
+	//printf("(decode) %d %d %d %d\n",instr_encodee_inst[0],instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 	switch(instr_encodee_inst[0])
 	{
 		case ADD :	
