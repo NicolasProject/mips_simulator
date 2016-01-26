@@ -1,2 +1,1 @@
-sub $t0, $t0, 12
-sub $t0, $t0, 2
+add $v0,   $zero 10

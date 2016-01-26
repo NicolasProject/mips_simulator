@@ -101,7 +101,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	{	
 		// On vérifie si l'instruction est de type R
 		
-		char reg[3];  // chaine qui contiendra un nom de registre
+		char reg[5];  // chaine qui contiendra un nom de registre
 		int j;	
 	
 		for(k=1; k<=3; k++){
@@ -123,7 +123,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 			}
 			else	// Registre
 			{
-				for(j=0; input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && j<2 && input[i]!='#' && input[i]!=9; i++,j++)
+				for(j=0; input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && j<4 && input[i]!='#' && input[i]!=9; i++,j++)
 				{	
 					reg[j]=input[i];	//On récupère le nom du registre
 				
@@ -297,32 +297,11 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	
 	}
 	
-	// convert intruction to hexa and write it in a file
-	FILE* hexaFile = NULL;
-	hexaFile = fopen("hexa.txt", "a");
-	if(hexaFile != NULL)
-	{
-		char hexaStr[9];
-		
-		convDecToHex(instrCode(instr_encodee), hexaStr);
-		fprintf(hexaFile, "%s\n", hexaStr);
-		
-		// close file
-		if(fclose(hexaFile) == EOF)
-		{
-			printf("Error closing file hexa.txt !");
-		}
-	}
-	else
-	{
-		printf("Error opening file hexa.txt !");
-	}
-	
 }	
 
 
 
-void load_instruct_mem(struct instruct_mem*im,int mem_pos,int*instruct)
+void (struct instruct_mem*im,int mem_pos,int*instruct)
 {
 	//printf("\ninside_load_inst :%d %d %d %d",instruct[0],instruct[1],instruct[2],instruct[3]);
 	int j=0;

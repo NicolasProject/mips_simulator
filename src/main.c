@@ -59,9 +59,9 @@ int main(int argc,char*args[])
 					
 					fichier = fopen("./mode_interactif.txt","r");
 					if(fichier != NULL){
-						read_file(fichier, im, dm);
+						len = read_file(fichier, im, dm);
 						fclose(fichier);
-						execute(im,0,dm,0);
+						execute(im,len-1,dm,0);
 					}
 					else{
 						printf("problème lors de l'ouverture du fichier en lecture");
@@ -74,6 +74,8 @@ int main(int argc,char*args[])
 			
 		}while(sortieBoucle ==0);
 	}
+	
+	
 	
 	
 	return 0;
