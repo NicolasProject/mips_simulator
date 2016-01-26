@@ -399,7 +399,7 @@ int label_pos(char*name)
 }
 
 
-void execute(struct instruct_mem*im,int fin,struct data_mem*dm)
+void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pas)
 {
 	pc = 0;			// Starts with the program counter at zero
 	char a;
@@ -407,6 +407,12 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm)
 	{
 		printf("pc=%d\n",pc);
 		decode(im->mem[pc].cod,dm);	
+		
+		afficher_registres();
+		if(modePas_A_Pas == 1){
+			printf("\nPour executer l'instruction suivant appuyez sur une touche\n");
+			getchar();
+		}
 		//scanf("%c",&a);
 	}
 }

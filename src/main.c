@@ -18,18 +18,23 @@ int main(int argc,char*args[])
 	struct instruct_mem *im = calloc(sizeof(struct instruct_mem),1);
 	struct data_mem *dm = calloc(sizeof(struct data_mem),1);
 		
-	if(argc > 1){
+	if(argc == 2){		//mode fichier
 		fichier = fopen(args[1],"r");
 		if(fichier != NULL){
 			len = read_file(fichier, im, dm);	// len stores the largest possible value of pc.
 			fclose(fichier);
-			execute(im,len,dm);
+			execute(im,len,dm,0);
 		}
 		else{
 			printf("problème lors de l'ouverture du fichier");
 		}
 	}
-	else{
+	
+	else if((argc == 3) && !strcmp(args[2],"-pas")){	// mode fichier pas a pas
+		printf("mode pas à pas");
+	}
+	
+	else if(argc == 1){		// mode interactif
 		do{
 			fichier = fopen("./mode_interactif.txt","w");
 			if(fichier != NULL){
@@ -48,7 +53,7 @@ int main(int argc,char*args[])
 					if(fichier != NULL){
 						read_file(fichier, im, dm);
 						fclose(fichier);
-						execute(im,0,dm);
+						execute(im,0,dm,0);
 						afficher_registres();
 					}
 					else{
