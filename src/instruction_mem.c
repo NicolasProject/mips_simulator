@@ -79,7 +79,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	
 	for(j=0;j<=11;j++)		// On balaye les opcodes
 	{
-		if(!strcmp(inst,funct[j])){		// Si l'opcode à l'indice j est celui que l'on a récuperé
+		if(!strcasecmp(inst,funct[j])){		// Si l'opcode à l'indice j est celui que l'on a récuperé
 			break;						// On sort de la boucle en gardant la valeur de l'indice j
 		}
 		
@@ -396,7 +396,6 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	{
 		//printf("pc=%d\n",pc);
 		printf("Instruction %i : %s (hexa: %s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);
-		printf("instruct dec : %d", instrCode(im->mem[pc].cod));
 		decode(im->mem[pc].cod,dm);	
 		
 		afficher_registres();
@@ -404,7 +403,9 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 			printf("\nPour executer l'instruction suivante appuyez sur la touche entree \n");
 			getchar();
 		}
-		//scanf("%c",&a);
+		else if(pc==fin+1){
+			printf("\nFin du programme\n");
+		}
 	}
 }
 
