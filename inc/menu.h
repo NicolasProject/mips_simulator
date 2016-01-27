@@ -9,6 +9,7 @@
 #include "data_mem.h"
 
 
-void menu(char * chaine, struct data_mem *dm);
+int menu(char * chaine, struct data_mem *dm);
+void clear_stdin(void);
 
 #endif 

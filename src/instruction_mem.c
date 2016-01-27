@@ -2,6 +2,7 @@
 // Encodage et décodage des instructions. 
 
 #include "instruction_mem.h"
+#include "menu.h"
 
 
 //Definition des opcodes 
@@ -193,7 +194,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		var_name[j]='\x0';
 		
 		// get location memory
-		memLocationIdx = atoi(var_name[j])
+		memLocationIdx = atoi(var_name);
 		if(memLocationIdx >= 0 && memLocationIdx <= DATA_MEM_SIZE)
 		{
 			instr_encodee[2] = memLocationIdx;
@@ -392,20 +393,43 @@ int label_pos(char*name)
 
 void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pas)
 {
+	char c;
+	char chaine[25];
+	int sortieBoucle = 0;
+	int quitter =0;
+	
 	pc = 0;			// Starts with the program counter at zero
 	while(pc<=fin)
 	{
 		//printf("pc=%d\n",pc);
-		printf("Instruction %i : %s (hexa: %s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);
+		printf("\nInstruction %i : %s (hexa: %s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);
 		decode(im->mem[pc].cod,dm);	
 		
 		afficher_registres();
 		if((modePas_A_Pas == 1) && (pc<=fin)){
-			printf("\nPour executer l'instruction suivante appuyez sur la touche entree \n");
-			getchar();
-		}
-		else if(pc==fin+1){
-			printf("\nFin du programme\n");
+			
+			do{
+				printf("\nPour executer l'instruction suivante appuyez sur 's', tapez 'f' pour entrer une autre fonction \n");
+				c = getchar();
+				if(c == 'f' || c == 'F'){
+					clear_stdin();
+					do{
+						printf("Entrez une fonction ou EXIT pour quitter :");
+						fgets(chaine, sizeof(chaine), stdin);
+						quitter = menu(chaine, dm);
+					}while(quitter == 2);
+					if(quitter == 1){
+						pc = fin;
+					}
+					
+				}
+				else if( c == 's' || c == 'S'){
+					sortieBoucle = 1;
+				}
+				else{
+					printf("Commande non reconnue");
+				}
+			}while(sortieBoucle==0);
 		}
 	}
 }
