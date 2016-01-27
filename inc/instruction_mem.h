@@ -26,6 +26,35 @@
 #define BEQ 	0b000100	//BEQ   => 4		
 #define MOVE 	0b000110	//MOVE  => 6
 
+
+#define ADD		0b100000
+#define ADDI		
+#define SUB		0b100010
+#define MULT		
+#define DIV		
+#define AND		0b100100
+#define OR		0b100101
+#define XOR		
+#define ROTR		
+#define SLL		
+#define SRL		
+#define SLT		0b101010
+#define BGTZ		
+#define BLEZ		
+#define BEQ		
+#define BNE		
+#define J		
+#define JAL		
+#define JR		
+#define LW		
+#define SW		
+#define MFHI		
+#define MFLO		
+#define LUI		
+#define SYSCALL		
+
+
+
 // instruction memory size
 #define INST_MEM_SIZE 1024
 

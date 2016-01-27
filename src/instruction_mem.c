@@ -5,8 +5,18 @@
 
 
 //Definition des opcodes 
-static const char funct[][8]={"add","sub","slt","and","or","syscall","beq","lw","sw","li","move","j"};
-static const int opcode[]={ADD,SUB,SLT,AND,OR,SYSCALL,BEQ,LW,SW,LI,MOVE,J};
+static const char funct[][8] = {
+	"add", "addi", "sub", "mult", "div", "and", "or", "xor", 
+	"rotr", "sll", "srl", "slt", 
+	"bgtz", "blez", "beq", "bne", 
+	"j", "jal", "jr", "lw", "sw", "mfhi", "mflo", "lui", "syscall"
+};
+static const int opcode[] = {
+	ADD, ADDI, SUB, MULT, DIV, AND, OR, XOR, 
+	ROTR, SLL, SRL, SLT, 
+	BGTZ, BLEZ, BEQ, BNE, 
+	J, JAL, JR, LW, SW, MFHI, MFLO, LUI, SYSCALL
+};
 
 void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 {
@@ -30,7 +40,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		inst[i]='\x0';		//Ajout du caractère de fin de chaine
 		
 		
-		for(j=0; j<label_num; j++)	// On parcoure les labels existants (label_num à 0 au début)
+		for(j=0; j<label_num; j++)	// On parcoure les labels existants (label_num contient le nombre de label)
 		{
 			if(!strcmp(labels.label[j].name,inst))	// si le label dans inst est dejà dans le tableau des labels à la case j
 			{
@@ -48,6 +58,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 			}
 		}
 		
+		// Le ----------------------------------------------------------------
 		if(!already_exists)		// Si le label n'existe pas
 		{
 			strcpy(labels.label[label_num].name,inst);	// On le met dans le tableau des labels
@@ -193,7 +204,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		var_name[j]='\x0';
 		
 		// get location memory
-		memLocationIdx = atoi(var_name[j])
+		memLocationIdx = atoi(var_name);
 		if(memLocationIdx >= 0 && memLocationIdx <= DATA_MEM_SIZE)
 		{
 			instr_encodee[2] = memLocationIdx;
@@ -381,7 +392,7 @@ int label_pos(char*name)
 			return i;
 	}
 	
-	// This means the reference has not been found yet. Store it in the array 
+	// Le label n'a pas ete trouve donc on creer un emplacement pour le label 
 	strcpy(labels.label[label_num].name,name);
 	labels.label[label_num].inst_num=-1;
 	
@@ -422,50 +433,40 @@ uint32_t instrCode(int *instr_encodee)
 		case SUB :
 		case SLT :
 		case OR  :
-			hexa = 0;
-			hexa |= ((int)instr_encodee[1]) << 11;
-			hexa |= ((int)instr_encodee[2]) << 21;
-			hexa |= ((int)instr_encodee[3]) << 16;
+		case XOR :
+			hexa |= ((uint32_t)instr_encodee[1]) << 11;
+			hexa |= ((uint32_t)instr_encodee[2]) << 21;
+			hexa |= ((uint32_t)instr_encodee[3]) << 16;
+			hexa |= (uint32_t)instr_encodee[0];
 			break;
 		
-		/*case SW :
-			hexa |= ((int)0b101011) << 26;
-			break;*/
-			
-		/*case LW :
-			hexa |= ((int)0b100011) << 26;
-			break;*/
-			
-		/*case J :
-			hexa |= ((int)0b000010) << 26;
-			break;*/
-			
-		/*case BEQ  :
-			hexa |= ((int)0b000100) << 26;
-			break;*/
-	}
-	
-	switch(instr_encodee[0])
-	{
-		// R-Type
-		case ADD :
-			hexa |= 0b100000;
+		case ADDI :
+			hexa |= ADDI << 26;
+			hexa |= ((uint32_t)instr_encodee[1]) << 16;
+			hexa |= ((uint32_t)instr_encodee[2]) << 21;
+			hexa |= (uint32_t)instr_encodee[3];
 			break;
 			
-		case AND :
-			hexa |= 0b100100;
+		case BEQ :
+		case BNE :
+			hexa |= (uint32_t)instr_encodee[0] << 26;
+			hexa |= ((uint32_t)instr_encodee[1]) << 21;
+			hexa |= ((uint32_t)instr_encodee[2]) << 16;
+			hexa |= (uint32_t)instr_encodee[3];
 			break;
 			
-		case SUB :
-			hexa |= 0b100010;
+		case BGTZ :
+		case BLEZ :
+			hexa |= (uint32_t)instr_encodee[0] << 26;
+			hexa |= ((uint32_t)instr_encodee[1]) << 21;
+			hexa |= (uint32_t)instr_encodee[2];
 			break;
 			
-		case SLT :
-			hexa |= 0b101010;
-			break;
-			
-		case OR  :
-			hexa |= 0b100101;
+		case J 	 :
+		case JAL :
+			hexa |= (uint32_t)instr_encodee[0] << 26;
+			// mask 28 low bits
+			hexa |= ((uint32_t)instr_encodee[1] & 0x0FFFFFFF);
 			break;
 	}
 	
