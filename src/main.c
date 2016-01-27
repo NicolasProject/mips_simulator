@@ -3,7 +3,7 @@
 #include "file_functions.h"
 #include "instruction_mem.h"
 #include "registers.h"
-
+#include "menu.h"
 
 int main(int argc,char*args[])
 {
@@ -49,8 +49,11 @@ int main(int argc,char*args[])
 				printf("entrez une instruction :\n");
 				fgets(chaine, sizeof(chaine), stdin);
 				
-				if(strcmp(chaine,"EXIT\n")==0){
-					sortieBoucle = 1;
+				if((strcasecmp(chaine,"EXIT\n"))==0 ||(strncmp(chaine,"print_reg",9))==0 ||(strncmp(chaine,"print_mem",9))==0){
+					menu(chaine, dm);
+					if((strcasecmp(chaine,"EXIT\n"))==0){
+						sortieBoucle = 1;
+					}
 				}
 				else{
 					fprintf(fichier, "%s", chaine);

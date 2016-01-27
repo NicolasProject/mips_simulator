@@ -22,5 +22,6 @@ void init_reg_file();	   // To initialise the register file (This is has to be c
 int reg_num(char*alt_name);	// Returns the number of the register given the alternate name.
 void afficher_registres();
 
+
 #endif 	// End of file
 
