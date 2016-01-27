@@ -192,8 +192,9 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		}	
 		var_name[j]='\x0';
 		
-		// Store the mem_location (in data memory)
-		if((memLocationIdx = get_mem_location(var_name,dm)) != -1)
+		// get location memory
+		memLocationIdx = atoi(var_name[j])
+		if(memLocationIdx >= 0 && memLocationIdx <= DATA_MEM_SIZE)
 		{
 			instr_encodee[2] = memLocationIdx;
 		}
