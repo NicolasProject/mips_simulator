@@ -58,7 +58,7 @@ int reg_num(char*alt_name)
 	}
 	else if( i == 2 && alt_name[0] >= '0' && alt_name[0] <= '3' )
 	{
-		return ( (alt_name[0] - '0' * 10) + (alt_name[1] - '0') );
+		return ( ((alt_name[0] - '0') * 10) + (alt_name[1] - '0') );
 	}
 	
 	// If its the alternate name, continue to use the alternate name stored in the reg_file array to 
@@ -84,9 +84,10 @@ int reg_num(char*alt_name)
 
 void afficher_registres(){
 	int i;
-	printf("ETAT DES REGISTRES	\n\n");
+	printf("\nEtat des registres apres l'instruction\n\n");
 	for(i=0; i<32; i++){
-		printf("registre : %s	valeur : %d\n" ,reg_file[i].alt_name, reg_file[i].val);
+		printf("registre : %i (%s)	valeur : %d\n" ,i, reg_file[i].alt_name, reg_file[i].val);
 	}
 	printf("\n");
 }
+

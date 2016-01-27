@@ -3,7 +3,7 @@
 #include "file_functions.h"
 #include "instruction_mem.h"
 #include "registers.h"
-
+#include "menu.h"
 
 int main(int argc,char*args[])
 {
@@ -49,8 +49,10 @@ int main(int argc,char*args[])
 				printf("entrez une instruction :\n");
 				fgets(chaine, sizeof(chaine), stdin);
 				
-				if(strcmp(chaine,"EXIT\n")==0){
-					sortieBoucle = 1;
+				if((strcasecmp(chaine,"EXIT\n"))==0 ||(strncmp(chaine,"print_reg",9))==0 ||(strncmp(chaine,"print_mem",9))==0){
+					do{
+						sortieBoucle = menu(chaine, dm);
+					}while(sortieBoucle == 2);
 				}
 				else{
 					fprintf(fichier, "%s", chaine);
@@ -59,9 +61,9 @@ int main(int argc,char*args[])
 					
 					fichier = fopen("./mode_interactif.txt","r");
 					if(fichier != NULL){
-						len = read_file(fichier, im, dm);
+						read_file(fichier, im, dm);
 						fclose(fichier);
-						execute(im,len-1,dm,0);
+						execute(im,0,dm,0);
 					}
 					else{
 						printf("problème lors de l'ouverture du fichier en lecture");

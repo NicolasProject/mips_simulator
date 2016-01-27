@@ -1,1 +1,2 @@
-add $v0,   $zero 10
+add $v0,  $zero 10
+aDd $v1,  $v0 10
