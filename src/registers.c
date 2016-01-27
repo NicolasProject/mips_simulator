@@ -53,7 +53,13 @@ int reg_num(char*alt_name)
 	i=strlen(alt_name);
 	
 	if (i==1)
-		return alt_name[0]-'0';
+	{
+		return (alt_name[0] - '0');
+	}
+	else if( i == 2 && alt_name[0] >= '0' && alt_name[0] <= '3' )
+	{
+		return ( (alt_name[0] - '0' * 10) + (alt_name[1] - '0') );
+	}
 	
 	// If its the alternate name, continue to use the alternate name stored in the reg_file array to 
 	// find the number
