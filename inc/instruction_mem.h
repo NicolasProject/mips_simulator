@@ -12,6 +12,7 @@
 #include "operations.h"
 #include "pc.h"
 
+/*
 // opcodes
 #define ADD 	0b100000	//ADD   => 32
 #define SUB 	0b100010	//SUB   => 34
@@ -25,33 +26,18 @@
 #define J 		0b000010	//J     => 2
 #define BEQ 	0b000100	//BEQ   => 4		
 #define MOVE 	0b000110	//MOVE  => 6
+*/
+#define LI 		0b100001	//LI    => 33
+#define MOVE 	0b100110	//MOVE  => 6
 
 
-#define ADD		0b100000
-#define ADDI		
-#define SUB		0b100010
-#define MULT		
-#define DIV		
-#define AND		0b100100
-#define OR		0b100101
-#define XOR		
-#define ROTR		
-#define SLL		
-#define SRL		
-#define SLT		0b101010
-#define BGTZ		
-#define BLEZ		
-#define BEQ		
-#define BNE		
-#define J		
-#define JAL		
-#define JR		
-#define LW		
-#define SW		
-#define MFHI		
-#define MFLO		
-#define LUI		
-#define SYSCALL		
+enum Mnemonique
+{
+	ADD=1, ADDI, SUB, MULT, DIV, AND, OR, XOR, 
+	ROTR, SLL, SRL, SLT, 
+	BGTZ, BLEZ, BEQ, BNE, 
+	J, JAL, JR, LW, SW, MFHI, MFLO, LUI, SYSCALL
+};
 
 
 
@@ -86,12 +72,17 @@ struct label_table
 int label_num;
 
 
-void encode(char *input, int *instr_encodee, struct data_mem *dm, int num);	 
+// split the input string (instruction) into opcode and operands
+void encode(char *input, int *instr_encodee, struct data_mem *dm, int num);
+// decode the instruction and execute it
 void decode(int *encoded_inst, struct data_mem *dm);	
 
-void load_instruct_mem(struct instruct_mem *im, int mem_pos, int *instruct, char* instruction); 
+// load 1 instruction into memory instruction
+void load_instruct_mem(struct instruct_mem *im, int mem_pos, int *instruct, char* instruction);
+// execute the instructions from memory instruction (execute the program)
 void execute(struct instruct_mem *im, int fin, struct data_mem *dm, int modePas_A_Pas);
 
+// get index of name label and reserve space if not already exits
 int label_pos(char *name);	
 
 // conversion instruction (instr_encodee) to hexa

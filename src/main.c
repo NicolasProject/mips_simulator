@@ -5,6 +5,7 @@
 #include "registers.h"
 #include "menu.h"
 
+
 int main(int argc,char*args[])
 {
 	init_reg_file();		// Initialize the register file

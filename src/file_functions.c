@@ -1,10 +1,4 @@
-/* Contains the definitions of the functions used to read the MIPS code from a file */
-
-// TODO : Introduce string
-
-
 #include "file_functions.h"
-#include <string.h>
 
 int first_char(char*line)
 {
@@ -65,9 +59,11 @@ int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
 		encode(temp,coded,dm,k);
 		//printf("%d\n",coded[0]);
 		
+		// si la ligne est une instruction (Mnemonique != 0)
 		if(coded[0])
 		{	
 			//printf("\n%d %d %d %d",coded[0],coded[1],coded[2],coded[3]);
+			// the instruction is loaded into memory instruction
 			load_instruct_mem(im,k,coded,temp);
 			k++;
 			//printf("\n%d %d %d %d ",im->mem[k].cod[0],im->mem[k].cod[1],im->mem[k].cod[2],im->mem[k].cod[3]);
@@ -77,6 +73,14 @@ int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
 		//printf("k=%d\n",k);
 		
 		
+	}
+	
+	// lorsque le fichier est entièrement lu et que les instructions sont stockées en mémoire
+	// on peut générer le code hexadecimal (il est stocké en mémoire avec les instructions)
+	for(i = 0; i < k; i++)
+	{
+		// store encoded instruction in memory
+		convDecToHex( instrCode( im->mem[i].cod ), im->mem[i].hexaStr, HEXA_INST_SIZE );
 	}
 	
 	return k;

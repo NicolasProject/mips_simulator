@@ -10,7 +10,9 @@
 #include "instruction_mem.h"
 #include "data_mem.h"
 
-int read_file(FILE *file,struct instruct_mem *im,struct data_mem *dm);   //Reads the file and includes the necessary instructions into the Instruction Memory
+// This function read line by line the file passed in argument and load
+// the instruction into memory instruction
+int read_file(FILE *file,struct instruct_mem *im,struct data_mem *dm);
 					   //in the encoded form.
 					   
 					   

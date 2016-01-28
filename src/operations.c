@@ -147,19 +147,20 @@ void store_word(int dest,int addr,struct data_mem*dm)
 	pc++;
 	return;	
 }
-void jump(int pc_dest)
+
+void jump(int labelIdx)
 {	
 //	printf("PC before JUMP : %d\n",pc);
-	pc=labels.label[pc_dest].inst_num;
+	pc=labels.label[labelIdx].inst_num;
 //	printf("PC after JUMP : %d\n",pc);
 	return;
 }
 
-void beq(int reg1,int reg2,int pc_dest)
+void beq(int reg1,int reg2,int labelIdx)
 {
 //	printf("PC before BEQ : %d\n",pc);
 	if(reg_file[reg1].val==reg_file[reg2].val)
-		pc=labels.label[pc_dest].inst_num;
+		pc=labels.label[labelIdx].inst_num;
 	else
 		pc++;
 		
