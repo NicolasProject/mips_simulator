@@ -228,3 +228,46 @@ void syscall()
 	pc++;
 	return;	
 }
+
+
+void rotr(int dest, int reg1, int shift) {
+	
+	uint32_t temp;
+	//printf("avant rotate right : %i",(reg_file[reg1].val));
+    temp = (((uint32_t)reg_file[reg1].val >> shift) | ((uint32_t)reg_file[reg1].val) << (sizeof((uint32_t)reg_file[reg1].val)*8 - shift));
+    //printf("après rotate right : %i",temp);
+    reg_file[dest].val = temp;
+    
+   	pc++;
+}
+
+void sll(int dest, int reg1, int shift) {
+	
+	uint32_t temp;
+	//printf("avant shift left : %i",(reg_file[reg1].val));
+    temp = ((uint32_t)reg_file[reg1].val << shift);
+    //printf("après left shift : %i",temp);
+    reg_file[dest].val = temp;
+    
+   	pc++;
+}
+
+void srl(int dest, int reg1, int shift) {
+	
+	uint32_t temp;
+	//printf("avant shift right : %i",(reg_file[reg1].val));
+    temp = ((uint32_t)reg_file[reg1].val >> shift);
+    //printf("après shift right : %i",temp);
+    reg_file[dest].val = temp;
+    
+   	pc++;
+}
+
+void xor(int dest, int reg1, int reg2) {
+
+    reg_file[dest].val = (reg_file[reg1].val ^ reg_file[reg2].val);
+   	pc++;
+}
+
+
+

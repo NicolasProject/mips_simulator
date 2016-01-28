@@ -13,6 +13,11 @@ void sub (int dest,int reg1,int reg2);		// Stores the difference of values in re
 void and_(int dest,int reg1,int reg2);		// Stores the 'and' of values in reg1 and reg2 in dest.
 void slt (int dest,int reg1,int reg2);		// Stores the slt of values in reg1 and reg2 in dest.
 void or_ (int dest,int reg1,int reg2);		// Stores the 'or' of values in reg1 and reg2 in dest.
+void xor(int dest, int reg1, int reg2);
+
+void rotr(int dest, int reg1, int shift);
+void sll(int dest, int reg1, int shift);
+void srl(int dest, int reg1, int shift);
 
 void addi(int dest,int reg1,int val);
 
