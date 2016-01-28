@@ -156,7 +156,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	
 	
 	/******************** Traitement type I *****************/
-	else if(instr_encodee[0]==LUI)
+	else if(instr_encodee[0]==LUI || instr_encodee[0]==BLEZ || instr_encodee[0]==BGTZ)
 	{
 		char reg[REG_NAME_SIZE];
 		int j;
@@ -255,10 +255,10 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	
 	/******************************* DEALING WITH beq AND j *****************************/
 	
-	else if(instr_encodee[0]==BEQ)
+	else if(instr_encodee[0]==BEQ || instr_encodee[0]==BNE)
 	{
 		char reg[REG_NAME_SIZE];
-		char label[20];
+		char offset[20];
 		
 		int j;
 	
@@ -283,21 +283,17 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		instr_encodee[2]=reg_num(reg);
 		
 		
-		for(;input[i]==',' || input[i]==32;i++);		// Move to the label
+		for(;input[i]==',' || input[i]==32;i++);		// Move to the offset
 		
 		// Copy the label
 		for(j=0;input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && input[i]!='#' && input[i]!=9;i++,j++)
 		{
-			label[j]=input[i];
+			offset[j]=input[i];
 			
 		}	
-		label[j]='\x0';				// Add NULL character to terminate string
+		offset[j]='\x0';				// Add NULL character to terminate string
 		
-		// on récupère la position du label dans la mémoire des labels
-		// on ne récupère pas l'adresse de l'instruction car on ne la connait pas forcément
-		// à ce stade de lecture du programme
-		// l'adresse est récupéré lors de l'exécution du programme
-		instr_encodee[3] = label_pos(label);
+		instr_encodee[3] = getValueStr(offset, NULL);
 	}
 	
 	else if(instr_encodee[0] == J || instr_encodee[0] == JAL)
@@ -398,6 +394,16 @@ void decode(int*instr_encodee_inst,struct data_mem*dm)
 		case BEQ  :
 				beq(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
+		case BNE  :
+				bne(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
+				break;
+		case BGTZ  :
+				bgtz(instr_encodee_inst[1],instr_encodee_inst[2]);
+				break;
+		case BLEZ  :
+				blez(instr_encodee_inst[1],instr_encodee_inst[2]);
+				break;
+				
 				
 		default   :	printf("Unknown instruction");
 				pc++;
