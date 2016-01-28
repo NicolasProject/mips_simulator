@@ -34,10 +34,10 @@ int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
 	k = 0;
 	j = 0;
 	
-	while(!feof(file))
+	
+	while(fgets(line,99,file) != NULL)
 	{	
-		line_num++;
-		fgets(line,99,file);
+		line_num++; // a quoi ca sert ? :) ... a compter les lignes
 		i=first_char(line);
 		
 		//printf("%s",line);

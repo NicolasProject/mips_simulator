@@ -426,7 +426,7 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	while(pc<=fin)
 	{
 		//printf("pc=%d\n",pc);
-		printf("\nInstruction %i : %s (hexa: %s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);
+		printf("\nInstruction %i : %s (hexa: 0x%s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);
 		decode(im->mem[pc].cod,dm);	
 		
 		afficher_registres();
@@ -467,7 +467,7 @@ uint32_t instrCode(int *instr_encodee)
 	switch(instr_encodee[0])
 	{
 		// R-Type
-		case ADD :
+		//case ADD :
 		case AND :
 		case SUB :
 		case SLT :
@@ -573,6 +573,11 @@ uint32_t instrCode(int *instr_encodee)
 		case SYSCALL :
 			hexa |= (uint32_t)opcodeVal[ SYSCALL ];
 			break;
+			
+		default :
+			printf("Impossible de traduire une instruction (enum opcode : %i) en hexadecimal (par default : 0x00000000)\n"
+					"Dans la fonction (uint32_t instrCode(int *instr_encodee))\n"
+					"Elle n'est peut-etre pas referencee\n\n", instr_encodee[0]);
 	}
 	
 	return hexa;
