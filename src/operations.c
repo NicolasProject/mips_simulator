@@ -176,11 +176,19 @@ void store_word(int dest,int addr,struct data_mem*dm)
 }
 
 void jump(int labelIdx)
-{	
-//	printf("PC before JUMP : %d\n",pc);
-	pc=labels.label[labelIdx].inst_num;
-//	printf("PC after JUMP : %d\n",pc);
-	return;
+{
+	pc = labels.label[labelIdx].inst_num;
+}
+
+void jal(int labelIdx)
+{
+	reg_file[31].val = pc + 1;
+	jump(labelIdx);
+}
+
+void jr(int reg)
+{
+	pc = reg_file[reg].val;
 }
 
 void beq(int reg1,int reg2,int offset)
