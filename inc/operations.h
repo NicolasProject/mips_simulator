@@ -30,7 +30,10 @@ void store_word(int dest,int addr,struct data_mem*dm);
 
 // Branch & Jump instructions
 void jump(int labelIdx);
-void beq(int reg1,int reg2,int labelIdx);
+void beq(int reg1,int reg2,int offset);
+void bne(int reg1,int reg2,int offset);
+void blez(int reg1, int offset);
+void bgtz(int reg1, int offset);
 
 
 // Syscall

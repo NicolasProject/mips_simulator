@@ -31,9 +31,9 @@ void addi(int dest,int reg1,int val)
 	//if(reg1<32)
 	//	printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);
 	
-	printf("reg1 : %i\n", reg1);
-	printf("immediate : %i\n", val);
-	printf("nom du reg dest : %s\n", reg_file[dest].alt_name);
+	//	printf("reg1 : %i\n", reg1);
+	//	printf("immediate : %i\n", val);
+	//	printf("nom du reg dest : %s\n", reg_file[dest].alt_name);
 	
 	if (reg1 < 32)
 	{
@@ -183,11 +183,12 @@ void jump(int labelIdx)
 	return;
 }
 
-void beq(int reg1,int reg2,int labelIdx)
+void beq(int reg1,int reg2,int offset)
 {
 //	printf("PC before BEQ : %d\n",pc);
+printf("offset: %i\n",offset);
 	if(reg_file[reg1].val==reg_file[reg2].val)
-		pc=labels.label[labelIdx].inst_num;
+		pc= pc + offset;
 	else
 		pc++;
 		
@@ -262,5 +263,36 @@ void xor(int dest, int reg1, int reg2) {
    	pc++;
 }
 
+void bgtz(int reg1, int offset){
+	
+	if(reg_file[reg1].val > 0){
+		pc = pc + offset;
+	}
+	else{
+		pc++;
+	}
+	
+}
 
+void blez(int reg1, int offset){
+	
+	if(reg_file[reg1].val <= 0){
+		pc = pc + offset;
+	}
+	else{
+		pc++;
+	}
+	
+}
 
+void bne(int reg1,int reg2,int offset)
+{
+
+	if(reg_file[reg1].val!=reg_file[reg2].val)
+		pc= pc + offset;
+	else
+		pc++;
+		
+	
+	return;
+}
