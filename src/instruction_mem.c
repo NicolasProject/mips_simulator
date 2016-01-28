@@ -120,7 +120,8 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		
 	/***************** Gestion des instructions de type R (ADD/SUB/AND/OR/SLT)****************/
 	
-	if(instr_encodee[0]==ADD||instr_encodee[0]==SUB||instr_encodee[0]==AND||instr_encodee[0]==OR||instr_encodee[0]==SLT||instr_encodee[0]==ADDI)
+	if(instr_encodee[0]==ADD||instr_encodee[0]==SUB||instr_encodee[0]==AND||instr_encodee[0]==OR||instr_encodee[0]==SLT||instr_encodee[0]==ADDI||
+		instr_encodee[0]==ROTR || instr_encodee[0]==SLL || instr_encodee[0]==SRL || instr_encodee[0]==XOR)
 	{	
 		// On vérifie si l'instruction est de type R
 		
@@ -353,6 +354,9 @@ void decode(int*instr_encodee_inst,struct data_mem*dm)
 		case OR  :
 				or_(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;		
+		case XOR  :
+				xor(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
+				break;
 		case SLT :
 				slt(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);	
 				break;
@@ -360,11 +364,18 @@ void decode(int*instr_encodee_inst,struct data_mem*dm)
 		case ADDI :
 				addi(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
-		
 		case LUI : 	
 				lui(instr_encodee_inst[1],instr_encodee_inst[2]);
-				break; 
-		
+				break;
+		case ROTR:
+				rotr(instr_encodee_inst[1], instr_encodee_inst[2], instr_encodee_inst[3]);
+				break;
+		case SLL:
+				sll(instr_encodee_inst[1], instr_encodee_inst[2], instr_encodee_inst[3]);
+				break;
+		case SRL:
+				srl(instr_encodee_inst[1], instr_encodee_inst[2], instr_encodee_inst[3]);
+				break;
 		case SYSCALL : 
 				syscall();
 				break;
@@ -455,7 +466,7 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	}
 }
 
-int getValueStr(char *str, int &idx);
+int getValueStr(char *str, int *idx);
 {
 	int val = 0;
 	

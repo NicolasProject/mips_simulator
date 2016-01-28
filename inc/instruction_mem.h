@@ -64,7 +64,7 @@ void encode(char *input, int *instr_encodee, struct data_mem *dm, int num);
 void decode(int *encoded_inst, struct data_mem *dm);
 
 // get value from string, take and return the index in the string
-int getValueStr(char *str, int &idx);
+int getValueStr(char *str, int *idx);
 
 // load 1 instruction into memory instruction
 void load_instruct_mem(struct instruct_mem *im, int mem_pos, int *instruct, char* instruction);
