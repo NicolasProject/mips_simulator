@@ -77,7 +77,7 @@ int main(int argc,char*args[])
 			
 		}while(sortieBoucle ==0);
 		
-		//remove("./mode_interactif.txt");
+		remove("./mode_interactif.txt");
 	}
 	
 	

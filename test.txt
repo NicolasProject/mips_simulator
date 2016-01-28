@@ -1,3 +1,6 @@
-addi $0 $1 -7
-#add $v0,  $zero 10
-#aDd $v1,  $v0 10
+addi $0 $1 -10
+LUI $2 200
+J label
+LUI $3 300
+label: 
+add $4 $3 0
