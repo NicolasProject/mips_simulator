@@ -10,7 +10,7 @@
 
 struct reg
 {
-	char alt_name[4];			// Stores names like $t0, $fp, $at
+	char alt_name[5];			// Stores names like $t0, $fp, $at
 	int val;
 };
 

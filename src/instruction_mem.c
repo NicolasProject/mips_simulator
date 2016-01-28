@@ -447,7 +447,7 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	{
 		//printf("pc=%d\n",pc);
 		printf("\nInstruction %i : %s (hexa: 0x%s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);
-		decode(im->mem[pc].cod,dm);	
+		decode(im->mem[pc].cod,dm);
 		
 		afficher_registres();
 		if((modePas_A_Pas == 1) && (pc<=fin)){
@@ -622,7 +622,7 @@ void convDecToHex(int decimal, char *hexa, int size)
         i--;
     }while(decimal > 0 && i >= 0);
     
-    if(i < 0)
+    if(decimal > 0 && i < 0)
     {
     	// ne doit normalement jamais arriver
     	printf("Erreur de taille d'instruction lors de la conversion hexa !\n");

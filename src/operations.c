@@ -31,7 +31,7 @@ void addi(int dest,int reg1,int val)
 	//if(reg1<32)
 	//	printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);
 	
-	printf("reg : %i\n", reg1);
+	printf("reg1 : %i\n", reg1);
 	printf("immediate : %i\n", val);
 	printf("nom du reg dest : %s\n", reg_file[dest].alt_name);
 	
@@ -43,17 +43,10 @@ void addi(int dest,int reg1,int val)
 	{
 		printf("Error ADDI !\n");
 	}
-	printf("nom du reg dest : %s\n", reg_file[dest].alt_name);
 	
 	pc++;
 	//printf("Adding .. %d %d\n",a,b);
 	//printf("Result in R[%d] = %d\n",dest,reg_file[dest].val);
-	
-	
-	
-	printf("reg : %i\n", reg1);
-	printf("immediate : %i\n", val);
-	printf("nom du reg dest : %s\n", reg_file[dest].alt_name);
 	
 	return;
 }
