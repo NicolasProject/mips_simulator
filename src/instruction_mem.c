@@ -466,26 +466,26 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	}
 }
 
-int getValueStr(char *str, int *idx);
+int getValueStr(char *str, int *idx)
 {
 	int val = 0;
 	
 	// test du signe
 	int sign = 1;
-	if(input[idx] == '+' || input[idx] == '-')
+	if(str[*idx] == '+' || str[*idx] == '-')
 	{
-		if(input[idx] == '-')
+		if(str[*idx] == '-')
 		{
 			sign = -1;
 		}
 		
-		i++;
+		(*idx)++;
 	}
 	
 	// On récupère le nombre entier
-	for(; input[idx]!=32 && input[idx]!=10 && input[idx]!='\x0' && input[idx]!=',' && input[idx]!='#'; idx++)
+	for(; str[*idx]!=32 && str[*idx]!=10 && str[*idx]!='\x0' && str[*idx]!=',' && str[*idx]!='#'; (*idx)++)
 	{
-		val = val * 10 + (input[idx] - '0');
+		val = val * 10 + (str[*idx] - '0');
 	}
 	
 	return val * sign;
