@@ -30,6 +30,8 @@ void store_word(int dest,int addr,struct data_mem*dm);
 
 // Branch & Jump instructions
 void jump(int labelIdx);
+void jal(int labelIdx);
+void jr(int reg);
 void beq(int reg1,int reg2,int labelIdx);
 
 

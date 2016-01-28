@@ -121,7 +121,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	/***************** Gestion des instructions de type R (ADD/SUB/AND/OR/SLT)****************/
 	
 	if(instr_encodee[0]==ADD||instr_encodee[0]==SUB||instr_encodee[0]==AND||instr_encodee[0]==OR||instr_encodee[0]==SLT||instr_encodee[0]==ADDI||
-		instr_encodee[0]==ROTR || instr_encodee[0]==SLL || instr_encodee[0]==SRL || instr_encodee[0]==XOR)
+		instr_encodee[0]==ROTR || instr_encodee[0]==SLL || instr_encodee[0]==SRL || instr_encodee[0]==XOR || instr_encodee[0]==JR)
 	{	
 		// On vérifie si l'instruction est de type R
 		
@@ -315,8 +315,6 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		label[j]='\x0';				// Add NULL character to terminate string
 		
 		instr_encodee[1]=label_pos(label);
-		
-	
 	}
 	
 }	
@@ -390,6 +388,12 @@ void decode(int*instr_encodee_inst,struct data_mem*dm)
 				break;
 		case J	  :	
 				jump(instr_encodee_inst[1]);
+				break;
+		case JAL :
+				jal(instr_encodee_inst[1]);
+				break;
+		case JR  :
+				jr(instr_encodee_inst[1]);
 				break;
 		case BEQ  :
 				beq(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
@@ -469,24 +473,41 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 int getValueStr(char *str, int *idx)
 {
 	int val = 0;
+	int i;
+	
+	// get index
+	if(idx == NULL)
+	{
+		i = 0;
+	}
+	else
+	{
+		i = *idx;
+	}
+	
+	// jump space
+	for(;str[i] == ' '; i++);
 	
 	// test du signe
 	int sign = 1;
-	if(str[*idx] == '+' || str[*idx] == '-')
+	if(str[i] == '+' || str[i] == '-')
 	{
-		if(str[*idx] == '-')
+		if(str[i] == '-')
 		{
 			sign = -1;
 		}
 		
-		(*idx)++;
+		i++;
 	}
 	
 	// On récupère le nombre entier
-	for(; str[*idx]!=32 && str[*idx]!=10 && str[*idx]!='\x0' && str[*idx]!=',' && str[*idx]!='#'; (*idx)++)
+	for(; str[i]!=32 && str[i]!=10 && str[i]!='\x0' && str[i]!=',' && str[i]!='#'; i++)
 	{
-		val = val * 10 + (str[*idx] - '0');
+		val = val * 10 + (str[i] - '0');
 	}
+	
+	if(idx != NULL)
+		*idx = i;
 	
 	return val * sign;
 }
