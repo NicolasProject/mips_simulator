@@ -124,7 +124,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	{	
 		// On vérifie si l'instruction est de type R
 		
-		char reg[5];  // chaine qui contiendra un nom de registre
+		char reg[REG_NAME_SIZE];  // chaine qui contiendra un nom de registre
 		int j;	
 	
 		for(k=1; k<=3; k++){
@@ -134,28 +134,9 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 			// Il peut être une valeur immediate ou un registre (si il est précedé de $ c'est un registre)
 			if(input[i-1]!='$')		// Valeur immédiate
 			{
-				int val=0;
-				// test du signe
-				int sign = 1;
-				if(input[i] == '+' || input[i] == '-')
-				{
-					if(input[i] == '-')
-					{
-						sign = -1;
-					}
-					
-					i++;
-				}
-				// On récupère le nombre entier
-				for(; input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && input[i]!='#'; i++){
-					val=val*10+(input[i]-'0');
-				}
-				
-				val *= sign;
-				
 				// Pour différencier valeur immédiate et registre on utilisera les nombres à partir de 32 pour les valeurs immédiate
 				// Les registres allant de 0 à 31
-				instr_encodee[k]=32+val;		// On ajoute alors la valeur à l'instruction encodée à l'indice 1
+				instr_encodee[k] = 32 + getValueStr(input, &i);		// On ajoute alors la valeur à l'instruction encodée à l'indice 1
 			}
 			else	// Registre
 			{
@@ -174,10 +155,10 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	
 	
 	/******************** Traitement type I *****************/
-	else if(instr_encodee[0]==LI)
+	else if(instr_encodee[0]==LUI)
 	{
-		char reg[3];
-		int j;	
+		char reg[REG_NAME_SIZE];
+		int j;
 		
 
 		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// Move to the next register
@@ -191,15 +172,10 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		instr_encodee[1]=reg_num(reg);
 		
 		
-		// Next information is the value to be stored.
-		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// Move to the next register
+		// Next information is the value to be stored
+		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// Move to the next operand
 		
-		instr_encodee[2]=0;
-		for(;input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && input[i]!='#' && input[i]!=9;i++)
-		{	
-			instr_encodee[2]=instr_encodee[2]*10+(input[i]-'0');
-		}	
-		//printf ("%d %d %d",instr_encodee[0],instr_encodee[1],instr_encodee[2]);
+		instr_encodee[2] = getValueStr(input, &i);
 	}
 	
 	else if (instr_encodee[0]==LW || instr_encodee[0]==SW)
@@ -210,7 +186,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		// base is a register, offset is an immediate value
 		// to simplify our assembly code, memory destination operand is only the address in data memory
 		
-		char reg[3], addr[20];
+		char reg[REG_NAME_SIZE], addr[20];
 		int j;	
 	
 		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// Move to the next register
@@ -251,7 +227,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	/************************* DEALING WITH MOVE *******************************/
 	else if(instr_encodee[0]==MOVE)
 	{
-		char reg[3];
+		char reg[REG_NAME_SIZE];
 		int j;
 	
 		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// Move to the next register
@@ -280,7 +256,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	
 	else if(instr_encodee[0]==BEQ)
 	{
-		char reg[3];
+		char reg[REG_NAME_SIZE];
 		char label[20];
 		
 		int j;
@@ -323,7 +299,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		instr_encodee[3] = label_pos(label);
 	}
 	
-	else if(instr_encodee[0]==J)
+	else if(instr_encodee[0] == J || instr_encodee[0] == JAL)
 	{
 		char label[20];
 		int j;
@@ -385,8 +361,8 @@ void decode(int*instr_encodee_inst,struct data_mem*dm)
 				addi(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
 		
-		case LI	 : 	
-				li(instr_encodee_inst[1],instr_encodee_inst[2]);
+		case LUI : 	
+				lui(instr_encodee_inst[1],instr_encodee_inst[2]);
 				break; 
 		
 		case SYSCALL : 
@@ -479,6 +455,31 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	}
 }
 
+int getValueStr(char *str, int &idx);
+{
+	int val = 0;
+	
+	// test du signe
+	int sign = 1;
+	if(input[idx] == '+' || input[idx] == '-')
+	{
+		if(input[idx] == '-')
+		{
+			sign = -1;
+		}
+		
+		i++;
+	}
+	
+	// On récupère le nombre entier
+	for(; input[idx]!=32 && input[idx]!=10 && input[idx]!='\x0' && input[idx]!=',' && input[idx]!='#'; idx++)
+	{
+		val = val * 10 + (input[idx] - '0');
+	}
+	
+	return val * sign;
+}
+
 uint32_t instrCode(int *instr_encodee)
 {
 	uint32_t hexa = 0;
@@ -500,7 +501,7 @@ uint32_t instrCode(int *instr_encodee)
 			break;
 		
 		case ADDI :
-			hexa |= (uint32_t)opcodeVal[ADDI -1] << 26;
+			hexa |= ((uint32_t)opcodeVal[ADDI -1]) << 26;
 			hexa |= ((uint32_t)instr_encodee[1]) << 16;
 			hexa |= ((uint32_t)instr_encodee[2]) << 21;
 			hexa |= (uint32_t)instr_encodee[3];
@@ -515,7 +516,7 @@ uint32_t instrCode(int *instr_encodee)
 			
 		case BEQ :
 		case BNE :
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ] << 26;
+			hexa |= ((uint32_t)opcodeVal[ instr_encodee[0] -1 ]) << 26;
 			hexa |= ((uint32_t)instr_encodee[1]) << 21;
 			hexa |= ((uint32_t)instr_encodee[2]) << 16;
 			hexa |= (uint32_t)instr_encodee[3];
@@ -523,14 +524,14 @@ uint32_t instrCode(int *instr_encodee)
 			
 		case BGTZ :
 		case BLEZ :
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ] << 26;
+			hexa |= ((uint32_t)opcodeVal[ instr_encodee[0] -1 ]) << 26;
 			hexa |= ((uint32_t)instr_encodee[1]) << 21;
 			hexa |= (uint32_t)instr_encodee[2];
 			break;
 			
 		case J 	 :
 		case JAL :
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ] << 26;
+			hexa |= ((uint32_t)opcodeVal[ instr_encodee[0] -1 ]) << 26;
 			// the operand instr_encodee[1] contain the label index (done in encode function)
 			// normalement dans le champs 'instr_index' (bit0-25) il doit y avoir les bits 2 à 27 de l'adresse de saut,
 			// mais on ne gère pas la mémoire à l'octet.
@@ -554,13 +555,13 @@ uint32_t instrCode(int *instr_encodee)
 		case SW :
 			// as said above (in encode function for LW and SW), we just give memory location to simplify assembler code
 			// ADDRESS IS PLACED IN OFFSET FIELD (bit0-15) !
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ] << 26;
+			hexa |= ((uint32_t)opcodeVal[ instr_encodee[0] -1 ]) << 26;
 			hexa |= ((uint32_t)instr_encodee[1]) << 16;
 			hexa |= (((uint32_t)instr_encodee[2]) & 0x0000FFFF); // masque de sécurité (si l'adresse est trop grande)
 			break;
 			
 		case LUI :
-			hexa |= (uint32_t)opcodeVal[LUI -1] << 26;
+			hexa |= ((uint32_t)opcodeVal[LUI -1]) << 26;
 			hexa |= ((uint32_t)instr_encodee[1]) << 16;
 			hexa |= ((uint32_t)instr_encodee[2]);
 			break;

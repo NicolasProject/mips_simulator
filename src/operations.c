@@ -132,10 +132,10 @@ void slt(int dest,int reg1,int reg2)
 }
 
 
-void li(int dest,int val)
+void lui(int dest,int val)
 {
 	
-	reg_file[dest].val=val;
+	reg_file[dest].val=((uint32_t)val) << 16;
 	pc++;
 	
 //	printf("Loading immediate value .. %d into R[%d]\n",val,dest);

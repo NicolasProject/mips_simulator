@@ -17,7 +17,7 @@ void or_ (int dest,int reg1,int reg2);		// Stores the 'or' of values in reg1 and
 void addi(int dest,int reg1,int val);
 
 // Load Immediate
-void li(int dest,int val);
+void lui(int dest,int val);
 
 // Load/Store instruction
 void load_word(int dest,int addr,struct data_mem*dm);

@@ -14,7 +14,6 @@
 
 #define SIZE_OPCODE_CHAR 8
 
-#define LI 		0b100001	//LI    => 33
 #define MOVE 	0b100110	//MOVE  => 6
 
 
@@ -62,7 +61,10 @@ int label_num;
 // split the input string (instruction) into opcode and operands
 void encode(char *input, int *instr_encodee, struct data_mem *dm, int num);
 // decode the instruction and execute it
-void decode(int *encoded_inst, struct data_mem *dm);	
+void decode(int *encoded_inst, struct data_mem *dm);
+
+// get value from string, take and return the index in the string
+int getValueStr(char *str, int &idx);
 
 // load 1 instruction into memory instruction
 void load_instruct_mem(struct instruct_mem *im, int mem_pos, int *instruct, char* instruction);

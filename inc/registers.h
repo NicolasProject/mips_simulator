@@ -8,9 +8,11 @@
 #include <malloc.h>
 #include <stdlib.h>
 
+#define REG_NAME_SIZE 5
+
 struct reg
 {
-	char alt_name[5];			// Stores names like $t0, $fp, $at
+	char alt_name[REG_NAME_SIZE];			// Stores names like $t0, $fp, $at
 	int val;
 };
 
