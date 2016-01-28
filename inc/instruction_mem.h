@@ -12,21 +12,8 @@
 #include "operations.h"
 #include "pc.h"
 
-/*
-// opcodes
-#define ADD 	0b100000	//ADD   => 32
-#define SUB 	0b100010	//SUB   => 34
-#define AND 	0b100100	//AND   => 36
-#define SLT 	0b101010	//SLT   => 42
-#define OR 		0b100101	//OR    => 37
-#define LI 		0b100001	//LI    => 33
-#define SYSCALL 0b001100	//SYSCALL=>12
-#define LW 		0b100011	//LW    => 35
-#define SW 		0b101011	//SW    => 43
-#define J 		0b000010	//J     => 2
-#define BEQ 	0b000100	//BEQ   => 4		
-#define MOVE 	0b000110	//MOVE  => 6
-*/
+#define SIZE_OPCODE_CHAR 8
+
 #define LI 		0b100001	//LI    => 33
 #define MOVE 	0b100110	//MOVE  => 6
 

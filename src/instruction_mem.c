@@ -6,7 +6,7 @@
 
 
 //Definition des opcodes 
-static const char funct[][8] = {
+static const char funct[][SIZE_OPCODE_CHAR] = {
 	"add", "addi", "sub", "mult", "div", "and", "or", "xor", 
 	"rotr", "sll", "srl", "slt", 
 	"bgtz", "blez", "beq", "bne", 
@@ -97,27 +97,30 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	}
 	inst[j]='\x0';			// On ajoute le caractère de fin de chaine
 	
-	for(j=0;j<=11;j++)		// On balaye les opcodes
+	const int nbOpcode = sizeof(funct) / (sizeof(char) * SIZE_OPCODE_CHAR);
+	//printf("nombre opcodes = %i", nbOpcode);
+	
+	for(j=0; j<=nbOpcode; j++)		// On balaye les opcodes
 	{
 		if(!strcasecmp(inst,funct[j])){		// Si l'opcode à l'indice j est celui que l'on a récuperé
-			break;						// On sort de la boucle en gardant la valeur de l'indice j
+			break;							// On sort de la boucle en gardant la valeur de l'indice j
 		}
 		
 	}
 	
-	if(j<=11){							// Si l'opcode récuperé est parmi ceux du tableau funct
+	if(j <= nbOpcode){					// Si l'opcode récuperé est parmi ceux du tableau funct
 		instr_encodee[0]=opcode[j];		// On affecte l'opcode à la chaine encodée à l'indice 0 (l'opcode est une énumération dans instruction_mem.h)
 	}
 	
 	else 											// Si l'opcode recupéré n'est pas dans le tableau funct
 	{
-		printf("Instruction inconnue : %s",inst);	// Alors il s'agit d'une instruction inconnue
+		printf("Instruction inconnue : %s\n",inst);	// Alors il s'agit d'une instruction inconnue
 		exit(3);
 	}
 		
 	/***************** Gestion des instructions de type R (ADD/SUB/AND/OR/SLT)****************/
 	
-	if(instr_encodee[0]==ADD||instr_encodee[0]==SUB||instr_encodee[0]==AND||instr_encodee[0]==OR||instr_encodee[0]==SLT)
+	if(instr_encodee[0]==ADD||instr_encodee[0]==SUB||instr_encodee[0]==AND||instr_encodee[0]==OR||instr_encodee[0]==SLT||instr_encodee[0]==ADDI)
 	{	
 		// On vérifie si l'instruction est de type R
 		
@@ -132,10 +135,23 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 			if(input[i-1]!='$')		// Valeur immédiate
 			{
 				int val=0;
+				// test du signe
+				int sign = 1;
+				if(input[i] == '+' || input[i] == '-')
+				{
+					if(input[i] == '-')
+					{
+						sign = -1;
+					}
+					
+					i++;
+				}
 				// On récupère le nombre entier
 				for(; input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && input[i]!='#'; i++){
 					val=val*10+(input[i]-'0');
 				}
+				
+				val *= sign;
 				
 				// Pour différencier valeur immédiate et registre on utilisera les nombres à partir de 32 pour les valeurs immédiate
 				// Les registres allant de 0 à 31
@@ -148,7 +164,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 					reg[j]=input[i];	//On récupère le nom du registre
 				
 				}	
-				reg[j]='\x0';	// On ajoute le caractère de fin de chaine
+				reg[j]='\0';	// On ajoute le caractère de fin de chaine
 				instr_encodee[k]=reg_num(reg);	// On recupere son numéro grâce à la fonction reg_num et on l'ajoute à l'instruction encodée
 			}
 		}
@@ -349,7 +365,7 @@ void decode(int*instr_encodee_inst,struct data_mem*dm)
 	//printf("(decode) %d %d %d %d\n",instr_encodee_inst[0],instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 	switch(instr_encodee_inst[0])
 	{
-		case ADD :	
+		case ADD :
 				add(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
 		case SUB :
@@ -363,6 +379,10 @@ void decode(int*instr_encodee_inst,struct data_mem*dm)
 				break;		
 		case SLT :
 				slt(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);	
+				break;
+				
+		case ADDI :
+				addi(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
 		
 		case LI	 : 	
@@ -467,7 +487,7 @@ uint32_t instrCode(int *instr_encodee)
 	switch(instr_encodee[0])
 	{
 		// R-Type
-		//case ADD :
+		case ADD :
 		case AND :
 		case SUB :
 		case SLT :
@@ -476,11 +496,11 @@ uint32_t instrCode(int *instr_encodee)
 			hexa |= ((uint32_t)instr_encodee[1]) << 11;
 			hexa |= ((uint32_t)instr_encodee[2]) << 21;
 			hexa |= ((uint32_t)instr_encodee[3]) << 16;
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] ];
+			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ];
 			break;
 		
 		case ADDI :
-			hexa |= (uint32_t)opcodeVal[ADDI] << 26;
+			hexa |= (uint32_t)opcodeVal[ADDI -1] << 26;
 			hexa |= ((uint32_t)instr_encodee[1]) << 16;
 			hexa |= ((uint32_t)instr_encodee[2]) << 21;
 			hexa |= (uint32_t)instr_encodee[3];
@@ -490,12 +510,12 @@ uint32_t instrCode(int *instr_encodee)
 		case DIV  :
 			hexa |= ((uint32_t)instr_encodee[1]) << 21;
 			hexa |= ((uint32_t)instr_encodee[2]) << 16;
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] ];
+			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ];
 			break;
 			
 		case BEQ :
 		case BNE :
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] ] << 26;
+			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ] << 26;
 			hexa |= ((uint32_t)instr_encodee[1]) << 21;
 			hexa |= ((uint32_t)instr_encodee[2]) << 16;
 			hexa |= (uint32_t)instr_encodee[3];
@@ -503,14 +523,14 @@ uint32_t instrCode(int *instr_encodee)
 			
 		case BGTZ :
 		case BLEZ :
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] ] << 26;
+			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ] << 26;
 			hexa |= ((uint32_t)instr_encodee[1]) << 21;
 			hexa |= (uint32_t)instr_encodee[2];
 			break;
 			
 		case J 	 :
 		case JAL :
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] ] << 26;
+			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ] << 26;
 			// the operand instr_encodee[1] contain the label index (done in encode function)
 			// normalement dans le champs 'instr_index' (bit0-25) il doit y avoir les bits 2 à 27 de l'adresse de saut,
 			// mais on ne gère pas la mémoire à l'octet.
@@ -527,20 +547,20 @@ uint32_t instrCode(int *instr_encodee)
 			
 		case JR :
 			hexa |= ((uint32_t)instr_encodee[1]) << 21;
-			hexa |= (uint32_t)opcodeVal[ JR ];
+			hexa |= (uint32_t)opcodeVal[ JR -1 ];
 			break;
 			
 		case LW :
 		case SW :
 			// as said above (in encode function for LW and SW), we just give memory location to simplify assembler code
 			// ADDRESS IS PLACED IN OFFSET FIELD (bit0-15) !
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] ] << 26;
+			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ] << 26;
 			hexa |= ((uint32_t)instr_encodee[1]) << 16;
 			hexa |= (((uint32_t)instr_encodee[2]) & 0x0000FFFF); // masque de sécurité (si l'adresse est trop grande)
 			break;
 			
 		case LUI :
-			hexa |= (uint32_t)opcodeVal[LUI] << 26;
+			hexa |= (uint32_t)opcodeVal[LUI -1] << 26;
 			hexa |= ((uint32_t)instr_encodee[1]) << 16;
 			hexa |= ((uint32_t)instr_encodee[2]);
 			break;
@@ -548,7 +568,7 @@ uint32_t instrCode(int *instr_encodee)
 		case MFHI :
 		case MFLO :
 			hexa |= ((uint32_t)instr_encodee[1]) << 11;
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] ];
+			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ];
 			break;
 			
 		case ROTR :
@@ -567,11 +587,11 @@ uint32_t instrCode(int *instr_encodee)
 			hexa |= ((uint32_t)instr_encodee[1]) << 11;
 			hexa |= ((uint32_t)instr_encodee[2]) << 16;
 			hexa |= ((uint32_t)instr_encodee[3]) << 6;
-			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] ];
+			hexa |= (uint32_t)opcodeVal[ instr_encodee[0] -1 ];
 			break;
 		
 		case SYSCALL :
-			hexa |= (uint32_t)opcodeVal[ SYSCALL ];
+			hexa |= (uint32_t)opcodeVal[ SYSCALL -1 ];
 			break;
 			
 		default :

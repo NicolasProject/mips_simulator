@@ -45,8 +45,6 @@ int main(int argc,char*args[])
 	
 	else if(argc == 1){		// mode interactif
 		do{
-			//fichier = fopen("./mode_interactif.txt","w");
-			//if(fichier != NULL){
 				printf("entrez une instruction :\n");
 				fgets(chaine, sizeof(chaine), stdin);
 				
@@ -56,24 +54,26 @@ int main(int argc,char*args[])
 					}while(sortieBoucle == 2);
 				}
 				else{
-					fichier = fopen("./mode_interactif.txt","w"); // add here
-					fprintf(fichier, "%s", chaine);
-					fclose(fichier);
-					
-					fichier = fopen("./mode_interactif.txt","r");
+					fichier = fopen("./mode_interactif.txt","w");
 					if(fichier != NULL){
-						read_file(fichier, im, dm);
+						
+						fprintf(fichier, "%s", chaine);
 						fclose(fichier);
-						execute(im,0,dm,0);
+						
+						fichier = fopen("./mode_interactif.txt","r");
+						if(fichier != NULL){
+							read_file(fichier, im, dm);
+							fclose(fichier);
+							execute(im,0,dm,0);
+						}
+						else{
+							printf("problème lors de l'ouverture du fichier en lecture");
+						}
 					}
 					else{
-						printf("problème lors de l'ouverture du fichier en lecture");
+						printf("problème lors de l'ouverture du fichier en écriture");
 					}
 				}
-			/*}
-			else{
-				printf("problème lors de l'ouverture du fichier en écriture");
-			}*/
 			
 		}while(sortieBoucle ==0);
 		

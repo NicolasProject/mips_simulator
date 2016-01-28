@@ -14,6 +14,8 @@ void and_(int dest,int reg1,int reg2);		// Stores the 'and' of values in reg1 an
 void slt (int dest,int reg1,int reg2);		// Stores the slt of values in reg1 and reg2 in dest.
 void or_ (int dest,int reg1,int reg2);		// Stores the 'or' of values in reg1 and reg2 in dest.
 
+void addi(int dest,int reg1,int val);
+
 // Load Immediate
 void li(int dest,int val);
 
