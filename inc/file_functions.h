@@ -11,9 +11,8 @@
 #include "data_mem.h"
 
 // This function read line by line the file passed in argument and load
-// the instruction into memory instruction
+// the instruction into memory instruction in the encoded form.
+
 int read_file(FILE *file,struct instruct_mem *im,struct data_mem *dm);
-					   //in the encoded form.
-					   
-					   
+
 #endif 		//End of file
