@@ -8,80 +8,115 @@
 
 int main(int argc,char*args[])
 {
-	init_reg_file();		// Initialize the register file
+	init_reg_file();		// Initialisation du fichier des registres
 	label_num=0;
 	int sortieBoucle = 0;
-	char chaine[99]= "";
+	char chaine[99]= "";	// Contiendra l'instruction en cours en mode interactif
 	
-	FILE* fichier =NULL;
-	int len = 0;
+	FILE* fichier =NULL;	// Contiendra le descripteur de fichier
+	int len = 0;			// Contiendra le nombre d'instructions
 	
-	struct instruct_mem *im = calloc(sizeof(struct instruct_mem),1);
-	struct data_mem *dm = calloc(sizeof(struct data_mem),1);
+	struct instruct_mem *im = calloc(sizeof(struct instruct_mem),1);	// On affecte la mémoire nécessaire à la mémoire d'instruction
+	struct data_mem *dm = calloc(sizeof(struct data_mem),1);			// On affecte la mémoire nécessaire à la mémoire de données
 		
-	if(argc == 2){		//mode fichier
-		fichier = fopen(args[1],"r");
-		if(fichier != NULL){
-			len = read_file(fichier, im, dm);	// len stores the largest possible value of pc.
-			fclose(fichier);
-			execute(im,len-1,dm,0);
+	if(argc == 2){		// 2 arguments donc mode fichier (on passe le nom du fichier)
+	
+		fichier = fopen(args[1],"r");			// On ouvre le fichier passé en argument
+		
+		if(fichier != NULL){					// Si l'ouverture s'est bien passée
+			
+			len = read_file(fichier, im, dm);		// On lit le fichier, stocke les instructions dans la mémoire d'instruction et encode chaque instruction
+													// len contient le nombre d'instructions
+			fclose(fichier);						// On ferme le fichier 
+			execute(im,len-1,dm,0);					// On execute les instructions présentes dans la mémoire d'instructions
+													// jusqu'à ce que PC = len-1 
+													// le dernier paramètre vaut ici 0 ce qui veut dire que l'on est pas en mode pas à pas
 		}
-		else{
+		
+		else									// Si l'ouverture s'est mal passée
+		{									
+			printf("problème lors de l'ouverture du fichier");	
+		}
+	}
+	
+	
+	else if((argc == 3) && !strcmp(args[2],"-pas")){	// Si on a 3 arguments et que le 3eme est "-pas" : mode fichier pas a pas
+		
+		fichier = fopen(args[1],"r");		// On ouvre le fichier en premier argument
+		
+		if(fichier != NULL){				// Si l'ouverture s'est bien passée
+			
+			len = read_file(fichier, im, dm);		// On lit le fichier, stocke les instructions dans la mémoire d'instruction et encode chaque instruction
+													// len contient le nombre d'instructions
+			fclose(fichier);						// On ferme le fichier
+			execute(im,len-1,dm,1);					// On execute les instructions présentes dans la mémoire d'instructions
+													// jusqu'à ce que PC = len-1 
+													// le dernier paramètre vaut ici 1 ce qui veut dire que l'on est en mode pas à pas
+		}
+		
+		else								// Si l'ouverture s'est mal passée
+		{
 			printf("problème lors de l'ouverture du fichier");
 		}
 	}
 	
-	else if((argc == 3) && !strcmp(args[2],"-pas")){	// mode fichier pas a pas
-		fichier = fopen(args[1],"r");
-		if(fichier != NULL){
-			len = read_file(fichier, im, dm);	// len stores the largest possible value of pc.
-			fclose(fichier);
-			execute(im,len-1,dm,1);
-		}
-		else{
-			printf("problème lors de l'ouverture du fichier");
-		}
-	}
 	
-	else if(argc == 1){		// mode interactif
+	else if(argc == 1){		// S'il n'y a qu'un argument : mode interactif
+	
 		do{
-				printf("entrez une instruction :\n");
-				fgets(chaine, sizeof(chaine), stdin);
+				printf("entrez une instruction :\n");		// L'utilisateur doit entrer une instruction
+				fgets(chaine, sizeof(chaine), stdin);		// On la récupère dans la chaine de caractère "chaine"
 				
 				if((strcasecmp(chaine,"EXIT\n"))==0 ||(strncmp(chaine,"print_reg",9))==0 ||(strncmp(chaine,"print_mem",9))==0){
+							// Si l'instruction entrée est EXIT ou qu'elle contient dans ses 9 premiers caractères : print_reg ou print_mem
+							
 					do{
-						sortieBoucle = menu(chaine, dm);
-					}while(sortieBoucle == 2);
+						sortieBoucle = menu(chaine, dm);	// On appelle la fonction menu à laquelle on passe l'instruction et la mémoire de données
+															// Cette fonction renvoie 1 si l'utilisateur a entré EXIT
+															//						  2 si l'utilsateur a entré une commande inconnue
+															// 						  0 sinon
+															// Si la commande entrée est "print_reg x", la fonction affiche le contenu du registre x
+															// Si la commande entrée est "print_mem x", la fonction affiche le contenu à l'adresse x
+															
+					}while(sortieBoucle == 2);		// Tant que l'utilisateur entre une commande inconnue
 				}
-				else{
-					fichier = fopen("./mode_interactif.txt","w");
-					if(fichier != NULL){
+				
+				else		// Si l'instruction entrée ne fait pas partie de celles ci dessus il s'agit normalement d'une instruction MIPS
+				{
+					fichier = fopen("./mode_interactif.txt","w");		// On ouvre alors le fichier "mode_interactif" en écriture
+				
+					if(fichier != NULL){								// Si son ouverture se passe correctement		
 						
-						fprintf(fichier, "%s", chaine);
-						fclose(fichier);
+						fprintf(fichier, "%s", chaine);						// On écrit dans le fichier l'instruction entrée par l'utilisateur
+						fclose(fichier);									// On ferme ensuite le fichier
 						
-						fichier = fopen("./mode_interactif.txt","r");
-						if(fichier != NULL){
-							read_file(fichier, im, dm);
-							fclose(fichier);
-							execute(im,0,dm,0);
-						}
-						else{
+						fichier = fopen("./mode_interactif.txt","r");		// On ouvre à nouveau le fichier mais en lecture
+						
+						if(fichier != NULL){								// Si l'ouverture se passe correctement
+							read_file(fichier, im, dm);							// On lit le fichier et stocke l'instruction dans im
+							fclose(fichier);									// Puis on referme le fichier
+							execute(im,0,dm,0);									// Et on execute l'instruction
+																				// Le deuxieme paramètre vaut 0 (valeur max de PC)
+																				// Le dernier paramètre vaut 0 (mode non pas à pas)
+						}	
+						else												// Si l'ouverture en lecture se passe mal
+						{													
 							printf("problème lors de l'ouverture du fichier en lecture");
 						}
 					}
-					else{
+					
+					else	// Si l'ouverture en écriture se passe mal
+					{
 						printf("problème lors de l'ouverture du fichier en écriture");
 					}
 				}
 			
-		}while(sortieBoucle ==0);
+		}while(sortieBoucle ==0);	// Tant que sortieBoucle =0 on refais la boucle. 
+									// SortieBoucle vaut 1 quand l'utilisateur entre EXIT
 		
 		//remove("./mode_interactif.txt");
 	}
 	
-	
-	
-	
 	return 0;
-}
+	
+}	// Fin fichier
