@@ -60,6 +60,7 @@ int label_num;
 
 // split the input string (instruction) into opcode and operands
 void encode(char *input, int *instr_encodee, struct data_mem *dm, int num);
+
 // decode the instruction and execute it
 void decode(int *encoded_inst, struct data_mem *dm);
 
@@ -68,6 +69,7 @@ int getValueStr(char *str, int *idx);
 
 // load 1 instruction into memory instruction
 void load_instruct_mem(struct instruct_mem *im, int mem_pos, int *instruct, char* instruction);
+
 // execute the instructions from memory instruction (execute the program)
 void execute(struct instruct_mem *im, int fin, struct data_mem *dm, int modePas_A_Pas);
 
@@ -76,8 +78,11 @@ int label_pos(char *name);
 
 // conversion instruction (instr_encodee) to hexa
 uint32_t instrCode(int *instr_encodee);
+
 // Converti une valeur decimal en hexadecimal
 void convDecToHex(int decimal, char *hexa, int size);
+
+
 /**
  * retourne la taille necessaire d'une chaine de caractere
  * pour contenir la valeur en hexadecimal de 'decimal'

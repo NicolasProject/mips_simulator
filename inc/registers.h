@@ -12,17 +12,17 @@
 
 struct reg
 {
-	char alt_name[REG_NAME_SIZE];			// Stores names like $t0, $fp, $at
-	int val;
+	char alt_name[REG_NAME_SIZE];			// Stores names like t0, fp, at...
+	int val;								// Stores the value of the register
 };
 
 
 extern struct reg reg_file[32];
 
 
-void init_reg_file();	   // To initialise the register file (This is has to be called before the first reference to registers)
-int reg_num(char*alt_name);	// Returns the number of the register given the alternate name.
-void afficher_registres();
+void init_reg_file();	   		// To initialise the register file (This is has to be called before the first reference to registers)
+int reg_num(char*alt_name);		// Returns the number of the register given the alternate name.
+void afficher_registres();		// Fonction qui affiche le contenu et le nom de tous les registres
 
 
 #endif 	// End of file

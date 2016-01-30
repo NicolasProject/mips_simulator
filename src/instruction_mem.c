@@ -28,6 +28,7 @@ static const int opcodeVal[] = {
 	0b000010, 0b000011, 0b001000, 0b100011, 0b101011, 0b010000, 0b010010, 0b001111, 0b001100
 };
 
+
 void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 {
 	char inst[10];		// Contient l'instruction (comme add,sub,move,b)
@@ -440,37 +441,56 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	int quitter =0;
 	
 	pc = 0;			// Starts with the program counter at zero
-	while(pc<=fin)
+	
+	while(pc<=fin)	// Tant que pc n'a pas atteint sa valeur max
 	{
 		//printf("pc=%d\n",pc);
-		printf("\nInstruction %i : %s (hexa: 0x%s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);
-		decode(im->mem[pc].cod,dm);
+		printf("\nInstruction %i : %s (hexa: 0x%s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);		// On affiche l'instruction et sa valeur en hexa
+		decode(im->mem[pc].cod,dm);																	// On decode et execute l'instruction
+		afficher_registres();																		// On affiche le contenu des registres
 		
-		afficher_registres();
-		if((modePas_A_Pas == 1) && (pc<=fin)){
+		
+		if((modePas_A_Pas == 1) && (pc<=fin)){	// Si on est en mode pas a pas
 			
 			do{
 				printf("\nPour executer l'instruction suivante appuyez sur 's', tapez 'f' pour entrer une autre fonction \n");
-				c = getchar();
-				if(c == 'f' || c == 'F'){
-					clear_stdin();
+				
+				c = getchar();		// on récupère le caractère entré par l'utilisateur
+				
+				if(c == 'f' || c == 'F'){	// Si c'est un F
+				
+					clear_stdin();		// On purge le flux d'entrée standard
+					
 					do{
-						printf("Entrez une fonction ou EXIT pour quitter :\n");
-						fgets(chaine, sizeof(chaine), stdin);
-						quitter = menu(chaine, dm);
-					}while(quitter == 2);
-					if(quitter == 1){
-						pc = fin;
-						sortieBoucle = 1;
+						printf("Entrez une fonction ou EXIT pour quitter :\n");		// On propose a l'utilisateur d'entrer une fonction ou de quitter
+						fgets(chaine, sizeof(chaine), stdin);						// On récupere la chaine entrée
+						quitter = menu(chaine, dm);									// On la passe a la fonction menu
+																					// Cette fonction renvoie 1 si l'utilisateur a entré EXIT
+																					//						  2 si l'utilsateur a entré une commande inconnue
+																					// 						  0 sinon
+																					// Si la commande entrée est "print_reg x", la fonction affiche le contenu du registre x
+																					// Si la commande entrée est "print_mem x", la fonction affiche le contenu à l'adresse x
+																					
+					}while(quitter == 2);	// On repete tant que la commande n'est pas reconnue 
+					
+					if(quitter == 1)		// Si la commande est exit
+					{
+						pc = fin;			// On met pc à fin
+						sortieBoucle = 1;	// Et on sortira de la boucle
 					}
 					
 				}
-				else if( c == 's' || c == 'S'){
-					sortieBoucle = 1;
+				
+				else if( c == 's' || c == 'S')	// Si la lettre est un S
+				{
+					sortieBoucle = 1;	// On sort de la boucle pour executer l'instruction suivante si pc <= fin
 				}
-				else{
-					printf("Commande non reconnue");
+				
+				else	// Si la lettre n'est ni s ni f
+				{
+					printf("Commande non reconnue");	// On laisse sortieBoucle à 0
 				}
+				
 			}while(sortieBoucle==0);
 		}
 	}
