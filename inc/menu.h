@@ -9,7 +9,7 @@
 #include "data_mem.h"
 
 
-int menu(char * chaine, struct data_mem *dm);
-void clear_stdin(void);
+int menu(char * chaine, struct data_mem *dm);   // éxecute une action selon ce que l'utilisateur a entrée dans "chaine"
+void clear_stdin(void);                         // purge le flux d'entrée
 
 #endif 

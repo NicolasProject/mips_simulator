@@ -9,8 +9,7 @@
 int main(int argc,char*args[])
 {
 	init_reg_file();		// Initialisation du fichier des registres
-	label_num=0;
-	int sortieBoucle = 0;
+	int sortieBoucle = 0;	// Variable de sortie de boucle
 	char chaine[99]= "";	// Contiendra l'instruction en cours en mode interactif
 	
 	FILE* fichier =NULL;	// Contiendra le descripteur de fichier
