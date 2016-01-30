@@ -8,7 +8,6 @@ void init_reg_file()
 	// Initialises the register file. This function should be called 
 	// before the first time the registerfile is accessed.	
 
-
 	strcpy(reg_file[0].alt_name,"zero");
 	strcpy(reg_file[1].alt_name,"at");
 	strcpy(reg_file[2].alt_name,"v0");
@@ -45,11 +44,13 @@ void init_reg_file()
 	return;
 }
 
+
 int reg_num(char*alt_name)
 {
 	int i;
 	
 	//Check if the input string is just the register number, or the alternate name.
+	
 	i=strlen(alt_name);
 	
 	if (i==1)
@@ -63,14 +64,16 @@ int reg_num(char*alt_name)
 	
 	// If its the alternate name, continue to use the alternate name stored in the reg_file array to 
 	// find the number
+	
 	for(i=0;i<32;i++)
 	{		
 		if(!strcmp(reg_file[i].alt_name,alt_name))
 			break;
 	}
 	
-	if(i!=32)
+	if(i!=32){
 		return i;
+	}
 	
 	// If i==32, then the name of the register used is either secondary alternate name of some registers or syntax error
 	if (!strcmp(alt_name,"s8"))
@@ -82,11 +85,15 @@ int reg_num(char*alt_name)
 	} 
 }
 
-void afficher_registres(){
+
+void afficher_registres(){	// Fonction qui affiche le contenu de chaque registre
+	
 	int i;
 	printf("\nEtat des registres apres l'instruction\n\n");
-	for(i=0; i<32; i++){
-		printf("registre : %i (%s)	valeur : %d\n" ,i, reg_file[i].alt_name, reg_file[i].val);
+	
+	for(i=0; i<32; i++)		// On balaye tous les registres
+	{
+		printf("registre : %i (%s)	valeur : %d\n" ,i, reg_file[i].alt_name, reg_file[i].val);   // On affiche leur contenu
 	}
 	printf("\n");
 }
