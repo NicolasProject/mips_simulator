@@ -650,7 +650,7 @@ uint32_t instrCode(int *instr_encodee)
 	return hexa;
 }
 
-void convDecToBase(int decimal, char *hexa, int size, const int base)
+void convDecToBase(uint32_t decimal, char *hexa, int size, const int base)
 {
 	int value, i = size -2;
     char car[] = "0123456789ABCDEF";
@@ -689,13 +689,13 @@ void convDecToBase(int decimal, char *hexa, int size, const int base)
     }
 }
 
-void convDecToHex(int decimal, char *hexa, int size)
+void convDecToHex(uint32_t decimal, char *hexa, int size)
 {
     convDecToBase(decimal, hexa, size, 16);
 }
 
 // finally not used because the instructions contain 8 hexadecimal characters (fix number)
-int getSizeHexaStrFromDec(int decimal)
+int getSizeHexaStrFromDec(uint32_t decimal)
 {
     // (log (base 16) decimal) + 1 + 1 (end of string character)
     return (log(decimal) / log(16) + 2);

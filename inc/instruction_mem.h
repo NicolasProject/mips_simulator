@@ -60,7 +60,7 @@ struct label_table
 	// This structure define a label (name and the address referencing the instruction)
 	struct label_element{
 		char name[LABEL_STR_SIZE];
-		int inst_num;	
+		int inst_num;
 		
 	} label[100];
 }labels;
@@ -90,16 +90,16 @@ int label_pos(char *name);
 uint32_t instrCode(int *instr_encodee);
 
 // decimal conversion to base
-void convDecToBase(int decimal, char *hexa, int size, const int base);
+void convDecToBase(uint32_t decimal, char *hexa, int size, const int base);
 // decimal conversion into hexa
-void convDecToHex(int decimal, char *hexa, int size);
+void convDecToHex(uint32_t decimal, char *hexa, int size);
 
 
 /**
  * retourne la taille necessaire d'une chaine de caractere
  * pour contenir la valeur en hexadecimal de 'decimal'
 */
-int getSizeHexaStrFromDec(int decimal);
+int getSizeHexaStrFromDec(uint32_t decimal);
 
 
 #endif 

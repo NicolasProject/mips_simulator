@@ -14,7 +14,7 @@
 struct reg
 {
 	char alt_name[REG_NAME_SIZE];			// Register name
-	uint32_t val;								// Register value
+	int32_t val;								// Register value
 };
 
 // definition in registers.c
@@ -22,7 +22,7 @@ struct reg reg_file[32];
 
 
 void init_reg_file();	   		// Initialize registers, must be called at the begining of the programm
-int reg_num(char*alt_name);		// Returns the number of the register
+unsigned int reg_num(char*alt_name);		// Returns the number of the register
 void afficher_registres();		// Display content and name of register
 
 

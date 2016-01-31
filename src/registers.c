@@ -37,9 +37,9 @@ void init_reg_file()
 }
 
 
-int reg_num(char*alt_name)
+unsigned int reg_num(char*alt_name)
 {
-	int i;
+	unsigned int i;
 	
 	// Traduit la valeur du registre de caractères vers un entier, si on a renseigné
 	// un numéro de registre, sinon recherche dans le tableau de registre
@@ -72,7 +72,7 @@ int reg_num(char*alt_name)
 // Display content and name of register
 void afficher_registres(){
 	
-	int i;
+	unsigned int i;
 	printf("\nEtat des registres apres l'instruction\n\n");
 	
 	for(i=0; i<32; i++)		// On balaye tous les registres
