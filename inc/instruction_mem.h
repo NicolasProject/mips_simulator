@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdint.h>
 #include <math.h>
 #include "data_mem.h"
 #include "registers.h"
@@ -90,6 +89,8 @@ int label_pos(char *name);
 // returns the instruction code understandable by the MIPS processor
 uint32_t instrCode(int *instr_encodee);
 
+// decimal conversion to base
+void convDecToBase(int decimal, char *hexa, int size, const int base);
 // decimal conversion into hexa
 void convDecToHex(int decimal, char *hexa, int size);
 

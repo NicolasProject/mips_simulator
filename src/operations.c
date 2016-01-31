@@ -1,37 +1,35 @@
-/* This file defines the functions to perform the operations on the register file and the data memory. 
- * The action performed by each instruction is taken care of here 
- */
- 
 #include "operations.h"
+#include <time.h>
+#include <errno.h>
 
-// NOTE : The case such as add $t0 $t0 1 (where immediate values are used) has been taken care of by alloting the space for the third register the value
-// 32+immediate value (here the case of negative immediate values is ignored )
 
 void add(int dest,int reg1,int reg2)
-{	
-	//if(reg1<32)
-	//	printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);
-	//if(reg1<32)
-	//	printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);	
+{
+	// Attention aux valeurs négatives des opérandes, car si reg1 < 32, alors elles sont
+	// interprétées comme des numéros de registre.
+	// Nous avons pris en compte les valeurs immédiate
+	// (normalement impossible pour ce type d'instruction du MIPS)
 	
-	int a=(reg1<32)?reg_file[reg1].val:reg1-32;
+	int a;
+	if(reg1<32)
+	{
+		a = reg_file[reg1].val;
+	}
+	else
+	{
+		a = reg1 - 32;
+	}
+	
+	// nous utilisons un ternaire pour raccourcir le code. Oui, celà reste moins lisible...
 	int b=(reg2<32)?reg_file[reg2].val:reg2-32;
+	
 	reg_file[dest].val=a+b;
+	
 	pc++;
-	
-	//printf("Adding .. %d %d\n",a,b);
-	//printf("Result in R[%d] = %d\n",dest,reg_file[dest].val);
-	
-	return;
 }
 
 void addi(int dest,int reg1,int val)
 {	
-	//if(reg1<32)
-	//	printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);
-	//if(reg1<32)
-	//	printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);
-	
 	//	printf("reg1 : %i\n", reg1);
 	//	printf("immediate : %i\n", val);
 	//	printf("nom du reg dest : %s\n", reg_file[dest].alt_name);
@@ -46,138 +44,61 @@ void addi(int dest,int reg1,int val)
 	}
 	
 	pc++;
-	//printf("Adding .. %d %d\n",a,b);
-	//printf("Result in R[%d] = %d\n",dest,reg_file[dest].val);
-	
-	return;
 }
 
  
 void sub(int dest,int reg1,int reg2)
 {	
-	//if(reg1<32)
-	//	printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);
-	//if(reg1<32)
-	//	printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);	
-		
 	int a=(reg1<32)?reg_file[reg1].val:reg1-32;
 	int b=(reg2<32)?reg_file[reg2].val:reg2-32;
 	
 	reg_file[dest].val=a-b;
 	pc++;
-	
-	//printf("Subtracting .. %d %d\n",a,b);
-	//printf("Result in R[%d] = %d\n",dest,reg_file[dest].val);
-
-	return;
 }
 
-void and_(int dest,int reg1,int reg2)
+void and(int dest,int reg1,int reg2)
 {	
-	//	if(reg1<32)
-	//		printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);
-	//	if(reg1<32)
-	//		printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);	
-		
-
 	int a=(reg1<32)?reg_file[reg1].val:reg1-32;
 	int b=(reg2<32)?reg_file[reg2].val:reg2-32;
 	
 	reg_file[dest].val=a & b;
 	pc++;
-	
-	//	printf("\'And\'ing .. %d %d\n",a,b);
-	//	printf("Result in R[%d] = %d\n",dest,reg_file[dest].val);
-
-	return;
 }
- 
 
-
-void or_(int dest,int reg1,int reg2)
+void or(int dest,int reg1,int reg2)
 {
-		
-	//	if(reg1<32)
-	//		printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);
-	//	if(reg1<32)
-	//		printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);
-				
 	int a=(reg1<32)?reg_file[reg1].val:reg1-32;
 	int b=(reg2<32)?reg_file[reg2].val:reg2-32;
 	
 	reg_file[dest].val=a | b;
 	pc++;
-	
-	//	printf("\'Or\'ing .. %d %d\n",a,b);
-	//	printf("Result in R[%d] = %d\n",dest,reg_file[dest].val);
-		
-	return;
 }
  
 void slt(int dest,int reg1,int reg2)
 {	
-	//	if(reg1<32)
-	//		printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);
-	//	if(reg1<32)
-	//		printf("Reading R[%d] ... R[%d]=%d\n",reg1,reg1,reg_file[reg1].val);
-
 	int a=(reg1<32)?reg_file[reg1].val:reg1-32;
 	int b=(reg2<32)?reg_file[reg2].val:reg2-32;
 	
 	reg_file[dest].val=(a<b)?1:0;
 	pc++;
-		
-	//	printf("\'SLT\'ing .. %d %d\n",a,b);
-	//	printf("Result in R[%d] = %d\n",dest,reg_file[dest].val);
-
-	return;
 }
-
 
 void lui(int dest,int val)
 {
-	
 	reg_file[dest].val=((uint32_t)val) << 16;
 	pc++;
-	
-	//	printf("Loading immediate value .. %d into R[%d]\n",val,dest);
-	//	printf("Result in R[%d] = %d\n",dest,reg_file[dest].val);
-		
-	return;
-}
-
-
-void move(int dest,int src)
-{
-	//	printf("Moving from R[%d] to R[%d]\n",src,dest);
-	
-	reg_file[dest].val=reg_file[src].val;
-	pc++;
-	
-	//	printf("Result in R[%d] = %d\n",dest,reg_file[dest].val);	
-	
-	return;
 }
 
 void load_word(int dest,int addr,struct data_mem*dm)
 {
-	//	printf("Loading word %s to R[%d]\n",dm->mem[addr].var_name,dest);
-	
 	reg_file[dest].val=(dm->mem[addr].val);
 	pc++;
-	
-	//	printf("Result in R[%d] = %d\n",dest,reg_file[dest].val);
-	
-	return;
 }
 
 void store_word(int dest,int addr,struct data_mem*dm)
 {
-	//	printf("Storing R[%d] to word %s \n",dest,dm->mem[addr].var_name);
-	
 	dm->mem[addr].val=reg_file[dest].val;
 	pc++;
-	return;	
 }
 
 void jump(int labelIdx)
@@ -198,44 +119,103 @@ void jr(int reg)
 
 void beq(int reg1,int reg2,int offset)
 {
-	//	printf("PC before BEQ : %d\n",pc);
+	printf("beq instruction offset: %i\n", offset);
 	
-	printf("offset: %i\n",offset);
 	if(reg_file[reg1].val==reg_file[reg2].val)
 		pc= pc + offset;
 	else
 		pc++;
-		
-	//	printf("PC after BEQ : %d\n",pc);	
-	
-	return;
 }
 
 void syscall()
 {
-
-	// Implementing only read_int and print_int features 
-
-	//	printf("IMPLEMENTING SYSCALL\n");
-	if(reg_file[2].val==1)
-	{
-		//	printf("Printing value in R[4]\n");
-		printf("%d\n",reg_file[4].val);		// Prints the value in register $a0
-	}
-	else if(reg_file[2].val==5)
-	{
-		scanf("%d",&reg_file[2].val);
-		//	printf("Input %d being stored in R[2]\n",reg_file[2].val);
-	}
-	else if(reg_file[2].val==10)
-	{
-	//	printf("Exiting program ...\n");
-		exit(0);
-	}	
-	//printf("$v0=%d\n",reg_file[2].val);
-	pc++;
+	// Différentes opération en fonction de la valeur du registre $v0
+	// Quelques fonctions sont implémentées
 	
-	return;	
+	switch(reg_file[2].val)
+	{
+		case 1:
+		
+			//printf("Valeur du registre $4 ($a0) : ");
+			printf("%d\n",reg_file[4].val);
+			
+			break;
+			
+		case 5:
+		
+			// Read integer
+			scanf("%d",&reg_file[2].val);
+			
+			break;
+			
+		case 10:
+			
+			//printf("Exiting program\n");
+			exit(EXIT_SUCCESS);
+			
+			break;
+			
+		case 32:
+		{
+			int result, repeatSleep = 100;
+			struct timespec remaining;
+			remaining.tv_sec = reg_file[4].val / 1000;
+			remaining.tv_nsec = (reg_file[4].val % 1000) * 1000000L; // long
+			
+			do
+			{
+				struct timespec ts_sleep = remaining;
+				//printf("sleep...\n");
+				result = nanosleep(&ts_sleep, &remaining);
+				repeatSleep--;
+				
+			}while(result == -1 && repeatSleep > 0);
+			//printf("repeatSleep : %d", 100 - repeatSleep);
+			
+			if(result)
+			{
+				printf("nanosleep function error : %s\n", strerror(errno));
+			}
+		
+			break;
+		}
+		
+		case 34:
+		{
+			// write hexadecimal of reg4 on 8 digits
+			/*
+			char str[9];
+			convDecToHex(reg_file[4].val, str, 9);
+			printf("0x%s\n", str);
+			*/
+			printf("0x%08x\n", reg_file[4].val);
+		
+			break;
+		}
+		
+		case 35:
+		{
+			// write binary of reg4 on 32 digits
+			char str[33];
+			convDecToBase(reg_file[4].val, str, 33, 2);
+			printf("0b%s\n", str);
+		
+			break;
+		}
+		
+		case 36:
+		
+			// print unsigned integer
+			printf("%d\n", reg_file[4].val);
+		
+			break;
+			
+			
+		default:
+			printf("Unknown syscall : %d\n", reg_file[2].val);
+	}
+	
+	pc++;
 }
 
 

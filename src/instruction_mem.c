@@ -320,11 +320,11 @@ void decode(int*instr_encodee_inst,struct data_mem*dm)
 				break;
 				
 		case AND :
-				and_(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
+				and(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
 				
 		case OR  :
-				or_(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
+				or(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
 				
 		case XOR  :
@@ -434,7 +434,7 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	while(pc<=fin)	// Tant que pc n'a pas atteint sa valeur max
 	{
 		//printf("pc = %d\n",pc);
-		printf("\nInstruction %i : %s (hexa: 0x%s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);		// On affiche l'instruction et sa valeur en hexa
+		printf("\nInstruction %i : %s (hexa: 0x%s)\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);		// On affiche l'instruction et sa valeur en hexa
 		decode(im->mem[pc].cod,dm);																	// On decode et execute l'instruction
 		afficher_registres();																		// On affiche le contenu des registres
 		
@@ -650,36 +650,48 @@ uint32_t instrCode(int *instr_encodee)
 	return hexa;
 }
 
-void convDecToHex(int decimal, char *hexa, int size)
+void convDecToBase(int decimal, char *hexa, int size, const int base)
 {
-    int value, i = size -2;
+	int value, i = size -2;
     char car[] = "0123456789ABCDEF";
-
 	
 	hexa[size-1] = '\0';
-    // The lower digit has the highest index (i) (just before '\0')
-    do
-    {
-        value = decimal % 16;
-        decimal /= 16;
-
-        // adding value to hexa string
-        hexa[i] = car[value];
-
-        i--;
-    }while(decimal > 0 && i >= 0);
-    
-    if(decimal > 0 && i < 0)
-    {
-    	// should never happen
-    	printf("Instruction size error during conversion into hexadecimal !\n");
-    }
+	
+	if(base >= 2 && base <= 16)
+	{
+	    // The lower digit has the highest index (i) (just before '\0')
+	    do
+	    {
+	        value = decimal % base;
+	        decimal /= base;
+	
+	        // adding value to hexa string
+	        hexa[i] = car[value];
+	
+	        i--;
+	    }while(decimal > 0 && i >= 0);
+	    
+	    if(decimal > 0 && i < 0)
+	    {
+	    	// should never happen
+	    	printf("Instruction size error during conversion into hexadecimal !\n");
+	    }
+	}
+	else
+	{
+		printf("Impossible to convert to base %d\n", base);
+	}
     
     // fill with zeros
     for(; i >= 0; i--)
     {
     	hexa[i] = '0';
     }
+}
+
+void convDecToHex(int decimal, char *hexa, int size)
+{
+    convDecToBase(decimal, hexa, size, 16);
 }
 
 // finally not used because the instructions contain 8 hexadecimal characters (fix number)

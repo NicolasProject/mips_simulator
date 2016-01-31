@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 #include <malloc.h>
 #include <stdlib.h>
 
@@ -13,7 +14,7 @@
 struct reg
 {
 	char alt_name[REG_NAME_SIZE];			// Register name
-	int val;								// Register value
+	uint32_t val;								// Register value
 };
 
 // definition in registers.c

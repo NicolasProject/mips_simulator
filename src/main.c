@@ -82,14 +82,14 @@ int main(int argc,char*args[])
 				
 				else		// Si l'instruction entrée ne fait pas partie de celles ci dessus il s'agit normalement d'une instruction MIPS
 				{
-					fichier = fopen("./mode_interactif.txt","w");		// On ouvre alors le fichier "mode_interactif" en écriture
+					fichier = fopen(TMP_FILENAME,"w");		// On ouvre alors le fichier TMP_FILENAME en écriture
 				
 					if(fichier != NULL){								// Si son ouverture se passe correctement		
 						
 						fprintf(fichier, "%s", chaine);						// On écrit dans le fichier l'instruction entrée par l'utilisateur
 						fclose(fichier);									// On ferme ensuite le fichier
 						
-						fichier = fopen("./mode_interactif.txt","r");		// On ouvre à nouveau le fichier mais en lecture
+						fichier = fopen(TMP_FILENAME,"r");		// On ouvre à nouveau le fichier mais en lecture
 						
 						if(fichier != NULL){								// Si l'ouverture se passe correctement
 							read_file(fichier, im, dm);							// On lit le fichier et stocke l'instruction dans im
@@ -113,7 +113,7 @@ int main(int argc,char*args[])
 		}while(sortieBoucle ==0);	// Tant que sortieBoucle =0 on refais la boucle. 
 									// SortieBoucle vaut 1 quand l'utilisateur entre EXIT
 		
-		remove("./mode_interactif.txt");
+		remove(TMP_FILENAME);
 	}
 	
 	return 0;
