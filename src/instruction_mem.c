@@ -428,6 +428,7 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	char chaine[25];
 	int sortieBoucle = 0;
 	int quitter =0;
+	int temp=-1;
 	
 	pc = 0;			// Starts with the program counter at zero
 	
@@ -438,12 +439,24 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 		decode(im->mem[pc].cod,dm);																	// On decode et execute l'instruction
 		afficher_registres();																		// On affiche le contenu des registres
 		
+		if(modePas_A_Pas == 2){
+			if(pc>temp){
+			printf("Instruction %i : %s (hexa: 0x%s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);		// On affiche l'instruction et sa valeur en hexa
+			temp = pc;
+			}
+			decode(im->mem[pc].cod,dm);																	// On decode et execute l'instruction pour passer à la suivante
+			
+		}
+		else{
+			printf("\nInstruction %i : %s (hexa: 0x%s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);		// On affiche l'instruction et sa valeur en hexa
+			decode(im->mem[pc].cod,dm);																	// On decode et execute l'instruction
+			afficher_registres();																		// On affiche le contenu des registres
+		}
 		
 		if((modePas_A_Pas == 1) && (pc<=fin)){	// Si on est en mode pas a pas
 			
 			do{
 				printf("\nPour executer l'instruction suivante appuyez sur 's', tapez 'f' pour entrer une autre fonction \n");
-				
 				c = getchar();		// on récupère le caractère entré par l'utilisateur
 				
 				if(c == 'f' || c == 'F'){	// Si c'est un F
@@ -473,6 +486,7 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 				else if( c == 's' || c == 'S')	// Si la lettre est un S
 				{
 					sortieBoucle = 1;	// On sort de la boucle pour executer l'instruction suivante si pc <= fin
+					clear_stdin();
 				}
 				
 				else	// Si la lettre n'est ni s ni f

@@ -60,6 +60,27 @@ int main(int argc,char*args[])
 	}
 	
 	
+	else if((argc == 3) && !strcmp(args[2],"-hexa")){	// Si on a 3 arguments et que le 3eme est "-hexa" : mode conversion fichier en hexa
+	
+		fichier = fopen(args[1],"r");		// On ouvre le fichier en premier argument
+		
+		if(fichier != NULL){				// Si l'ouverture s'est bien passée
+			
+			len = read_file(fichier, im, dm);		// On lit le fichier, stocke les instructions dans la mémoire d'instruction et encode chaque instruction
+													// len contient le nombre d'instructions
+			fclose(fichier);						// On ferme le fichier
+			execute(im,len-1,dm,2);					// On execute les instructions présentes dans la mémoire d'instructions
+													// jusqu'à ce que PC = len-1 
+													// le dernier paramètre vaut ici 2 ce qui veut dire que l'on est en mode conversion hexa
+		}
+		
+		else								// Si l'ouverture s'est mal passée
+		{
+			printf("problème lors de l'ouverture du fichier");
+		}
+	}
+	
+	
 	else if(argc == 1){		// S'il n'y a qu'un argument : mode interactif
 	
 		do{
