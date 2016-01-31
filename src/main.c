@@ -66,7 +66,7 @@ int main(int argc,char*args[])
 		
 		if(fichier != NULL){				// Si l'ouverture s'est bien passée
 			
-			len = read_file(fichier, im, dm);		// On lit le fichier, stocke les instructions dans la mémoire d'instruction et encode chaque instruction
+			len = read_file(fichier, im);			// On lit le fichier, stocke les instructions dans la mémoire d'instruction et encode chaque instruction
 													// len contient le nombre d'instructions
 			fclose(fichier);						// On ferme le fichier
 			execute(im,len-1,dm,2);					// On execute les instructions présentes dans la mémoire d'instructions

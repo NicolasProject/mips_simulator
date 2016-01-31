@@ -1,5 +1,5 @@
 CC := gcc
-TARGET ?= out
+TARGET ?= emul-mips
 DEBUG ?= 1
 SRCDIR := src
 INCDIR := inc
