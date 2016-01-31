@@ -12,6 +12,7 @@ static const char funct[][SIZE_OPCODE_CHAR] = {
 	"bgtz", "blez", "beq", "bne", 
 	"j", "jal", "jr", "lw", "sw", "mfhi", "mflo", "lui", "syscall"
 };
+// Tableau contenant les opcodes
 static const int opcode[] = {
 	ADD, ADDI, SUB, MULT, DIV, AND, OR, XOR, 
 	ROTR, SLL, SRL, SLT, 
@@ -31,31 +32,33 @@ static const int opcodeVal[] = {
 
 void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 {
-	char inst[10];		// Contient l'instruction (comme add,sub,move,b)
-	int j=0,i=0,k=0;
+	char inst[SIZE_OPCODE_CHAR];		// Contient l'instruction (comme add,sub,move,b)
+	int i=0,j,k;
 	char*ptr;
 	int memLocationIdx;
 	
-	/****** Traitement particulier pour les labels ****************/
+	// **************************************************************************
+	// Traitement particulier pour les labels
 			
 	if( (ptr = strchr(input,':')) != 0 )
 	{
+		char lbl[LABEL_STR_SIZE];
 		// Pour les labels, on met instr_encodee[0]=0 (this way it is not loaded into the instruction memory if this value doesn't change)
 		instr_encodee[0]=0;
 		int already_exists=0;			// Variable indiquant si le label est présent en mémoire
 					
-		for(; input[i]!=*ptr && input[i]!=32; i++){		//On recupere le texte du label dans inst
-			inst[i]=input[i];
+		for(; input[i]!=*ptr && input[i]!=32; i++){		//On recupere le texte du label dans lbl
+			lbl[i]=input[i];
 		}
 		
-		inst[i]='\x0';		//Ajout du caractère de fin de chaine
+		lbl[i]='\x0';		//Ajout du caractère de fin de chaine
 		
 		
 		for(j=0; j<label_num; j++)	// On parcoure les labels existants (label_num contient le nombre de label)
 		{
-			if(!strcmp(labels.label[j].name,inst))	// si le label dans inst est dejà dans le tableau des labels à la case j
+			if(!strcmp(labels.label[j].name,lbl))	// si le label lbl est dejà dans le tableau des labels à la case j
 			{
-				if(labels.label[j].inst_num==-1)	// mais qu'il n'est pas dans une instruction : inst_num = -1
+				if(labels.label[j].inst_num==-1)	// mais qu'il ne référence pas une instruction : inst_num = -1
 				{
 					already_exists=1;				// alors maintenant il existe
 					labels.label[j].inst_num=num;	// On affecte le numéro de l'instruction dans laquelle il se trouve
@@ -63,7 +66,7 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 				}
 				else	// Sinon, il a été utilisé plus d'une fois
 				{
-					printf("Label %s a été utilisé plus d'une fois \n",inst);
+					printf("Label %s a été utilisé plus d'une fois \n",lbl);
 					exit(4);		// Label re-use
 				}
 			}
@@ -71,42 +74,38 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		
 		if(!already_exists)		// Si le label n'existe pas
 		{
-			strcpy(labels.label[label_num].name,inst);	// On le met dans le tableau des labels
+			strcpy(labels.label[label_num].name,lbl);	// On le met dans le tableau des labels
 			labels.label[label_num].inst_num=num;		// On affecte le numéro de l'instruction correspondante
 			label_num++;								// On incrémente le nombre de label
-		
-			//printf("%d",i);
+			
+			
 			for(; input[i]==32 || input[i]==':' || input[i]==9; i++);
-		
-			//printf("char=%c\n",input[i]);
-		
-			if(input[i]=='\n' || input[i]=='\x0' || input[i]=='#'){
+			
+			if(input[i]=='\n' || input[i]=='\x0' || input[i]=='#'){ 	// On arrete on sort de la fonction encode et on va lire l'instruction suivante
 				return;
 			}
 			
 		}		
 	}		
 	
-	/*****************Traitement de l'instruction si elle ne contient pas de label***********************************************/
+	// **************************************************************************
+	// Traitement de l'instruction si elle ne contient pas de label
 	
-	
+	// On copie le premier mot dans inst
 	for(j=0; input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=9; i++,j++)
 	{
-		//On copie le premier mot dans inst
 		inst[j]=input[i];
-			
 	}
 	inst[j]='\x0';			// On ajoute le caractère de fin de chaine
 	
-	const int nbOpcode = sizeof(funct) / (sizeof(char) * SIZE_OPCODE_CHAR);
+	const int nbOpcode = sizeof(funct) / (sizeof(char) * SIZE_OPCODE_CHAR); // number of available opcode
 	//printf("nombre opcodes = %i", nbOpcode);
 	
-	for(j=0; j<=nbOpcode; j++)		// On balaye les opcodes
+	for(j=0; j<=nbOpcode; j++)				// On balaye les opcodes
 	{
 		if(!strcasecmp(inst,funct[j])){		// Si l'opcode à l'indice j est celui que l'on a récuperé
 			break;							// On sort de la boucle en gardant la valeur de l'indice j
 		}
-		
 	}
 	
 	if(j <= nbOpcode){					// Si l'opcode récuperé est parmi ceux du tableau funct
@@ -118,8 +117,9 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		printf("Instruction inconnue : %s\n",inst);	// Alors il s'agit d'une instruction inconnue
 		exit(3);
 	}
-		
-	/***************** Gestion des instructions de type R (ADD/SUB/AND/OR/SLT)****************/
+	
+	// **************************************************************************
+	// Gestion des instructions de type R (ADD/SUB/AND/OR/SLT) + ADDI
 	
 	if(instr_encodee[0]==ADD||instr_encodee[0]==SUB||instr_encodee[0]==AND||instr_encodee[0]==OR||instr_encodee[0]==SLT||instr_encodee[0]==ADDI||
 		instr_encodee[0]==ROTR || instr_encodee[0]==SLL || instr_encodee[0]==SRL || instr_encodee[0]==XOR || instr_encodee[0]==JR)
@@ -127,11 +127,10 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		// On vérifie si l'instruction est de type R
 		
 		char reg[REG_NAME_SIZE];  // chaine qui contiendra un nom de registre
-		int j;	
 	
 		for(k=1; k<=3; k++){
 			
-			for(; input[i]==',' || input[i]==32 || input[i]=='$'; i++);		// On se rend au mot suivant qui sera le premier registre
+			for(; input[i]==',' || input[i]==32 || input[i]=='$'; i++);		// On se rend au mot suivant
 			
 			// Il peut être une valeur immediate ou un registre (si il est précedé de $ c'est un registre)
 			if(input[i-1]!='$')		// Valeur immédiate
@@ -152,56 +151,54 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 			}
 		}
 		
-		//printf ("%d %d %d %d",instr_encodee[0],instr_encodee[1],instr_encodee[2],instr_encodee[3]);	 
 	}
 	
+	// **************************************************************************
+	// Traitement type I
 	
-	/******************** Traitement type I *****************/
 	else if(instr_encodee[0]==LUI || instr_encodee[0]==BLEZ || instr_encodee[0]==BGTZ)
 	{
 		char reg[REG_NAME_SIZE];
-		int j;
 		
 
-		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// Move to the next register
+		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);	// On va jusqu'au 1er registre
 		
 		for(j=0;input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && j<2 && input[i]!='#' && input[i]!=9;i++,j++)
 		{	
 			reg[j]=input[i];
 		
 		}	
-		reg[j]='\x0';				// Add NULL character to terminate string
+		reg[j]='\x0';				// Add end of string
 		instr_encodee[1]=reg_num(reg);
 		
 		
-		// Next information is the value to be stored
-		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// Move to the next operand
+		// Next information is a value (instruction address or offset)
+		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);	// On va jusqu'a la valeur suivante
 		
-		instr_encodee[2] = getValueStr(input, &i);
+		instr_encodee[2] = getValueStr(input, &i); // On récupère la valeur
 	}
 	
 	else if (instr_encodee[0]==LW || instr_encodee[0]==SW)
 	{
-		/* These instructions have a register and then a memory destination */
+		// operands : register, memory destination
 		
 		// memory destination : offset(base)
 		// base is a register, offset is an immediate value
 		// to simplify our assembly code, memory destination operand is only the address in data memory
 		
 		char reg[REG_NAME_SIZE], addr[20];
-		int j;	
 	
-		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// Move to the next register
+		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);	// On va jusqu'au registre
 		
 		for(j=0;input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && j<2 && input[i]!='#' && input[i]!=9;i++,j++)
 		{	
 			reg[j]=input[i];
 		
 		}	
-		reg[j]='\x0';				// Add NULL character to terminate string
+		reg[j]='\x0';
 		instr_encodee[1]=reg_num(reg);
 		
-		for(;input[i]==',' || input[i]==32;i++);		// Move to the memory location given
+		for(;input[i]==',' || input[i]==32;i++);		// On se déplace jusqu'a la valeur suivante (adresse mémoire)
 		
 		// get memory location
 		for(j=0;input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && input[i]!='#' && input[i]!=9;i++,j++)
@@ -220,21 +217,15 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		{
 			printf ("Error on getting memory location !");
 		}
-		
-		//printf ("%d %d %d",instr_encodee[0],instr_encodee[1],instr_encodee[2]);
 	}
-	/******************************************************************************/
 	
-	
-	
-	/******************************* DEALING WITH beq AND j *****************************/
+	// **************************************************************************
+	// Traitement BEQ et BNE
 	
 	else if(instr_encodee[0]==BEQ || instr_encodee[0]==BNE)
 	{
 		char reg[REG_NAME_SIZE];
 		char offset[20];
-		
-		int j;
 	
 		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// Move to the next register
 		
@@ -270,10 +261,12 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		instr_encodee[3] = getValueStr(offset, NULL);
 	}
 	
+	// **************************************************************************
+	// Traitement J et JAL
+	
 	else if(instr_encodee[0] == J || instr_encodee[0] == JAL)
 	{
 		char label[20];
-		int j;
 		
 		for(;input[i]==32;i++);		// Move to the label
 		
@@ -287,44 +280,57 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 		instr_encodee[1]=label_pos(label);
 	}
 	
+	
+	// debuggage
+	// print instr_encodee
+	/*
+	printf("instr_encodee : ");
+	for(k=0; k<FIELD_INST_NBR; k++){
+		printf("%d ", instr_encodee[k]);
+	}
+	printf("\n");
+	*/
 }	
 
 
 void load_instruct_mem(struct instruct_mem* im,int mem_pos,int* instruct, char* instruction)
 {
-	//printf("\ninside_load_inst :%d %d %d %d",instruct[0],instruct[1],instruct[2],instruct[3]);
+	// copy the instruction string into memory instruction
 	strcpy( im->mem[mem_pos].c, instruction);
 	
-	int j=0;
-	for(j=0; j<4; j++){
+	// copy the instruction encoded into memory instruction
+	int j;
+	for(j=0; j<FIELD_INST_NBR; j++){
 		im->mem[mem_pos].cod[j]=instruct[j];
 	}
-	
-	//printf("\n%d %d %d %d ",im->mem[mem_pos].cod[0],im->mem[mem_pos].cod[1],im->mem[mem_pos].cod[2],im->mem[mem_pos].cod[3]);
 }
 
 
 
 void decode(int*instr_encodee_inst,struct data_mem*dm)
 {
-	//printf("(decode) %d %d %d %d\n",instr_encodee_inst[0],instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 	switch(instr_encodee_inst[0])
 	{
 		case ADD :
 				add(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
+				
 		case SUB :
 				sub(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
+				
 		case AND :
 				and_(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
+				
 		case OR  :
 				or_(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
-				break;		
+				break;
+				
 		case XOR  :
 				xor(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
+				
 		case SLT :
 				slt(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);	
 				break;
@@ -332,18 +338,23 @@ void decode(int*instr_encodee_inst,struct data_mem*dm)
 		case ADDI :
 				addi(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
+				
 		case LUI : 	
 				lui(instr_encodee_inst[1],instr_encodee_inst[2]);
 				break;
+				
 		case ROTR:
 				rotr(instr_encodee_inst[1], instr_encodee_inst[2], instr_encodee_inst[3]);
 				break;
+				
 		case SLL:
 				sll(instr_encodee_inst[1], instr_encodee_inst[2], instr_encodee_inst[3]);
 				break;
+				
 		case SRL:
 				srl(instr_encodee_inst[1], instr_encodee_inst[2], instr_encodee_inst[3]);
 				break;
+				
 		case SYSCALL : 
 				syscall();
 				break;
@@ -351,37 +362,44 @@ void decode(int*instr_encodee_inst,struct data_mem*dm)
 		case LW   :
 				load_word(instr_encodee_inst[1],instr_encodee_inst[2],dm);
 				break;
+				
 		case SW   :
 				store_word(instr_encodee_inst[1],instr_encodee_inst[2],dm);
 				break;
+				
 		case J	  :	
 				jump(instr_encodee_inst[1]);
 				break;
+				
 		case JAL :
 				jal(instr_encodee_inst[1]);
 				break;
+				
 		case JR  :
 				jr(instr_encodee_inst[1]);
 				break;
+				
 		case BEQ  :
 				beq(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
+				
 		case BNE  :
 				bne(instr_encodee_inst[1],instr_encodee_inst[2],instr_encodee_inst[3]);
 				break;
+				
 		case BGTZ  :
 				bgtz(instr_encodee_inst[1],instr_encodee_inst[2]);
 				break;
+				
 		case BLEZ  :
 				blez(instr_encodee_inst[1],instr_encodee_inst[2]);
 				break;
 				
 				
-		default   :	printf("Unknown instruction");
+		default   :
+				printf("Unknown instruction");
 				pc++;
-				//exit(3);			// Exit code 3 => unknown instruction
 	}
-	return;
 }
 
 
@@ -415,7 +433,7 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	
 	while(pc<=fin)	// Tant que pc n'a pas atteint sa valeur max
 	{
-		//printf("pc=%d\n",pc);
+		//printf("pc = %d\n",pc);
 		printf("\nInstruction %i : %s (hexa: 0x%s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);		// On affiche l'instruction et sa valeur en hexa
 		decode(im->mem[pc].cod,dm);																	// On decode et execute l'instruction
 		afficher_registres();																		// On affiche le contenu des registres
@@ -485,7 +503,7 @@ int getValueStr(char *str, int *idx)
 	// jump space
 	for(;str[i] == ' '; i++);
 	
-	// test du signe
+	// sign test
 	int sign = 1;
 	if(str[i] == '+' || str[i] == '-')
 	{
@@ -497,7 +515,7 @@ int getValueStr(char *str, int *idx)
 		i++;
 	}
 	
-	// On récupère le nombre entier
+	// get integer
 	for(; str[i]!=32 && str[i]!=10 && str[i]!='\x0' && str[i]!=',' && str[i]!='#'; i++)
 	{
 		val = val * 10 + (str[i] - '0');
@@ -513,7 +531,6 @@ uint32_t instrCode(int *instr_encodee)
 {
 	uint32_t hexa = 0;
 	
-	// set special (6 first bits)
 	switch(instr_encodee[0])
 	{
 		// R-Type
@@ -640,13 +657,13 @@ void convDecToHex(int decimal, char *hexa, int size)
 
 	
 	hexa[size-1] = '\0';
-    // le digit de poids faible a l'indice le plus eleve (situe juste avant '\0')
+    // The lower digit has the highest index (i) (just before '\0')
     do
     {
         value = decimal % 16;
         decimal /= 16;
 
-        // on ajoute la valeur a la chaine hexa
+        // adding value to hexa string
         hexa[i] = car[value];
 
         i--;
@@ -654,20 +671,20 @@ void convDecToHex(int decimal, char *hexa, int size)
     
     if(decimal > 0 && i < 0)
     {
-    	// ne doit normalement jamais arriver
-    	printf("Erreur de taille d'instruction lors de la conversion hexa !\n");
+    	// should never happen
+    	printf("Instruction size error during conversion into hexadecimal !\n");
     }
     
-    // on complete par des zeros
+    // fill with zeros
     for(; i >= 0; i--)
     {
     	hexa[i] = '0';
     }
 }
 
-// finalement non utilise car les instructions contiennent 8 caracteres hexa
+// finally not used because the instructions contain 8 hexadecimal characters (fix number)
 int getSizeHexaStrFromDec(int decimal)
 {
-    // (log (base 16) decimal) + 1 + 1 (caractere fin de chaine)
+    // (log (base 16) decimal) + 1 + 1 (end of string character)
     return (log(decimal) / log(16) + 2);
 }
