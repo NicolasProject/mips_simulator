@@ -7,19 +7,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-	// data memory size
-	#define DATA_MEM_SIZE 1024
-	
-	struct data_mem
+// data memory size
+#define DATA_MEM_SIZE 1024
+
+struct data_mem
+{
+	struct data_mem_element
 	{
-		struct data_mem_element
-		{
-			char var_name[20];
-			int val;
+		char var_name[20];
+		int val;
+	
+	}mem[DATA_MEM_SIZE];
+};
 		
-		}mem[DATA_MEM_SIZE];
-	};
-			
 
 #endif		//End of file
 
