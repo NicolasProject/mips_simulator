@@ -14,7 +14,7 @@ int first_char(char*line)
 	 	return i;
 }
 
-int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
+int read_file(FILE*file,struct instruct_mem*im)
 {
 	char line[SIZE_INSTR_STR] = "";
 	char temp[SIZE_INSTR_STR] = "";
@@ -38,9 +38,9 @@ int read_file(FILE*file,struct instruct_mem*im,struct data_mem*dm)
 		}
 		temp[j]='\x0';			// On ajoute le caractère de fin de chaine
 		
-		encode(temp,instr_encodee,dm,k);	// On encode l'instruction contenue dans temp
-											// L'instruction encodée sera contenue dans instr_encodee
-											// instr_encodee[0] identifie la fonction (mnemonique)
+		encode(temp,instr_encodee,k);	// On encode l'instruction contenue dans temp
+										// L'instruction encodée sera contenue dans instr_encodee
+										// instr_encodee[0] identifie la fonction (mnemonique)
 		
 		//printf("mnemonique enum : %d\n",instr_encodee[0]);
 		

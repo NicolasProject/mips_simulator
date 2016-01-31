@@ -68,7 +68,7 @@ int label_num;
 
 
 // split the input string (instruction) into opcode and operands
-void encode(char *input, int *instr_encodee, struct data_mem *dm, int num);
+void encode(char *input, int *instr_encodee, int num);
 
 // decode the instruction and execute it
 void decode(int *encoded_inst, struct data_mem *dm);

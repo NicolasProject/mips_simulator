@@ -24,12 +24,12 @@ int main(int argc,char*args[])
 		
 		if(fichier != NULL){					// Si l'ouverture s'est bien passée
 			
-			len = read_file(fichier, im, dm);		// On lit le fichier, stocke les instructions dans la mémoire d'instruction et encode chaque instruction
-													// len contient le nombre d'instructions
-			fclose(fichier);						// On ferme le fichier 
-			execute(im,len-1,dm,0);					// On execute les instructions présentes dans la mémoire d'instructions
-													// jusqu'à ce que PC = len-1 
-													// le dernier paramètre vaut ici 0 ce qui veut dire que l'on est pas en mode pas à pas
+			len = read_file(fichier, im);		// On lit le fichier, stocke les instructions dans la mémoire d'instruction et encode chaque instruction
+												// len contient le nombre d'instructions
+			fclose(fichier);					// On ferme le fichier 
+			execute(im,len-1,dm,0);				// On execute les instructions présentes dans la mémoire d'instructions
+												// jusqu'à ce que PC = len-1 
+												// le dernier paramètre vaut ici 0 ce qui veut dire que l'on est pas en mode pas à pas
 		}
 		
 		else									// Si l'ouverture s'est mal passée
@@ -45,12 +45,12 @@ int main(int argc,char*args[])
 		
 		if(fichier != NULL){				// Si l'ouverture s'est bien passée
 			
-			len = read_file(fichier, im, dm);		// On lit le fichier, stocke les instructions dans la mémoire d'instruction et encode chaque instruction
-													// len contient le nombre d'instructions
-			fclose(fichier);						// On ferme le fichier
-			execute(im,len-1,dm,1);					// On execute les instructions présentes dans la mémoire d'instructions
-													// jusqu'à ce que PC = len-1 
-													// le dernier paramètre vaut ici 1 ce qui veut dire que l'on est en mode pas à pas
+			len = read_file(fichier, im);	// On lit le fichier, stocke les instructions dans la mémoire d'instruction et encode chaque instruction
+											// len contient le nombre d'instructions
+			fclose(fichier);				// On ferme le fichier
+			execute(im,len-1,dm,1);			// On execute les instructions présentes dans la mémoire d'instructions
+											// jusqu'à ce que PC = len-1 
+											// le dernier paramètre vaut ici 1 ce qui veut dire que l'on est en mode pas à pas
 		}
 		
 		else								// Si l'ouverture s'est mal passée
@@ -92,11 +92,11 @@ int main(int argc,char*args[])
 						fichier = fopen(TMP_FILENAME,"r");		// On ouvre à nouveau le fichier mais en lecture
 						
 						if(fichier != NULL){								// Si l'ouverture se passe correctement
-							read_file(fichier, im, dm);							// On lit le fichier et stocke l'instruction dans im
-							fclose(fichier);									// Puis on referme le fichier
-							execute(im,0,dm,0);									// Et on execute l'instruction
-																				// Le deuxieme paramètre vaut 0 (valeur max de PC)
-																				// Le dernier paramètre vaut 0 (mode non pas à pas)
+							read_file(fichier, im);							// On lit le fichier et stocke l'instruction dans im
+							fclose(fichier);								// Puis on referme le fichier
+							execute(im,0,dm,0);								// Et on execute l'instruction
+																			// Le deuxieme paramètre vaut 0 (valeur max de PC)
+																			// Le dernier paramètre vaut 0 (mode non pas à pas)
 						}	
 						else												// Si l'ouverture en lecture se passe mal
 						{													

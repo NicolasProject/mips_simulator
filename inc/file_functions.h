@@ -13,7 +13,7 @@
 
 // Read line by line the file passed in argument and load
 // the instruction into memory instruction
-int read_file(FILE *file,struct instruct_mem *im,struct data_mem *dm);
+int read_file(FILE *file,struct instruct_mem *im);
 
 
 #endif 		//End of file

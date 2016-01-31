@@ -30,7 +30,7 @@ static const int opcodeVal[] = {
 };
 
 
-void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
+void encode(char*input,int*instr_encodee,int num)
 {
 	char inst[SIZE_OPCODE_CHAR];		// Contient l'instruction (comme add,sub,move,b)
 	int i=0,j,k;
