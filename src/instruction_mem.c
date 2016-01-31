@@ -226,33 +226,6 @@ void encode(char*input,int*instr_encodee,struct data_mem*dm,int num)
 	/******************************************************************************/
 	
 	
-	/************************* DEALING WITH MOVE *******************************/
-	else if(instr_encodee[0]==MOVE)
-	{
-		char reg[REG_NAME_SIZE];
-		int j;
-	
-		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// Move to the next register
-		
-		for(j=0;input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && j<2 && input[i]!='#' && input[i]!=9;i++,j++)
-		{	
-			reg[j]=input[i];
-		
-		}	
-		reg[j]='\x0';				// Add NULL character to terminate string
-		instr_encodee[1]=reg_num(reg);
-		
-		for(;input[i]==',' || input[i]==32 || input[i]=='$';i++);		// Move to the next register
-		
-		for(j=0;input[i]!=32 && input[i]!=10 && input[i]!='\x0' && input[i]!=',' && j<2 && input[i]!='#' && input[i]!=9;i++,j++)
-		{	
-			reg[j]=input[i];
-		
-		}	
-		reg[j]='\x0';				// Add NULL character to terminate string
-		instr_encodee[2]=reg_num(reg);
-	}
-	/*************************************************************************************/
 	
 	/******************************* DEALING WITH beq AND j *****************************/
 	
@@ -374,9 +347,7 @@ void decode(int*instr_encodee_inst,struct data_mem*dm)
 		case SYSCALL : 
 				syscall();
 				break;
-		case MOVE :
-				move(instr_encodee_inst[1],instr_encodee_inst[2]);
-				break;
+				
 		case LW   :
 				load_word(instr_encodee_inst[1],instr_encodee_inst[2],dm);
 				break;

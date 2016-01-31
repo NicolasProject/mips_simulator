@@ -14,7 +14,6 @@
 
 #define SIZE_OPCODE_CHAR 8
 
-#define MOVE 	0b100110	//MOVE  => 6
 
 
 enum Mnemonique
