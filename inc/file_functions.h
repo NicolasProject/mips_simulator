@@ -6,13 +6,14 @@
 #include <stdint.h>
 #include <malloc.h>
 
-// Including libraries declaring the instruction memory and data memory structures
 #include "instruction_mem.h"
 #include "data_mem.h"
 
-// This function read line by line the file passed in argument and load
-// the instruction into memory instruction in the encoded form.
+#define TMP_FILENAME ".tmp_mips.txt"
 
-int read_file(FILE *file,struct instruct_mem *im,struct data_mem *dm);
+// Read line by line the file passed in argument and load
+// the instruction into memory instruction
+int read_file(FILE *file,struct instruct_mem *im);
+
 
 #endif 		//End of file

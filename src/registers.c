@@ -1,13 +1,7 @@
 #include "registers.h"
-// TODO Complete the register file 
-
-struct reg reg_file[32];
 
 void init_reg_file()
 {
-	// Initialises the register file. This function should be called 
-	// before the first time the registerfile is accessed.	
-
 	strcpy(reg_file[0].alt_name,"zero");
 	strcpy(reg_file[1].alt_name,"at");
 	strcpy(reg_file[2].alt_name,"v0");
@@ -40,16 +34,15 @@ void init_reg_file()
 	strcpy(reg_file[29].alt_name,"sp");
 	strcpy(reg_file[30].alt_name,"fp");
 	strcpy(reg_file[31].alt_name,"ra");
-	
-	return;
 }
 
 
-int reg_num(char*alt_name)
+unsigned int reg_num(char*alt_name)
 {
-	int i;
+	unsigned int i;
 	
-	//Check if the input string is just the register number, or the alternate name.
+	// Traduit la valeur du registre de caractères vers un entier, si on a renseigné
+	// un numéro de registre, sinon recherche dans le tableau de registre
 	
 	i=strlen(alt_name);
 	
@@ -62,33 +55,24 @@ int reg_num(char*alt_name)
 		return ( ((alt_name[0] - '0') * 10) + (alt_name[1] - '0') );
 	}
 	
-	// If its the alternate name, continue to use the alternate name stored in the reg_file array to 
-	// find the number
 	
 	for(i=0;i<32;i++)
-	{		
-		if(!strcmp(reg_file[i].alt_name,alt_name))
-			break;
-	}
-	
-	if(i!=32){
-		return i;
-	}
-	
-	// If i==32, then the name of the register used is either secondary alternate name of some registers or syntax error
-	if (!strcmp(alt_name,"s8"))
-		return 30;
-	else 
 	{
-		printf("Syntax error. %s : no such register",alt_name);
-		exit(1);				// Error of register name yields an exit code 1
-	} 
+		// if found, stop search
+		if(!strcmp(reg_file[i].alt_name,alt_name))
+			return i;
+	}
+	
+	// register name is not found !
+	printf("Syntax error ! %s : no such register",alt_name);
+	exit(1);				// Error of register name yields an exit code 1
 }
 
 
-void afficher_registres(){	// Fonction qui affiche le contenu de chaque registre
+// Display content and name of register
+void afficher_registres(){
 	
-	int i;
+	unsigned int i;
 	printf("\nEtat des registres apres l'instruction\n\n");
 	
 	for(i=0; i<32; i++)		// On balaye tous les registres
