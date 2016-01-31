@@ -134,7 +134,7 @@ int main(int argc,char*args[])
 		}while(sortieBoucle ==0);	// Tant que sortieBoucle =0 on refais la boucle. 
 									// SortieBoucle vaut 1 quand l'utilisateur entre EXIT
 		
-		//remove("./mode_interactif.txt");
+		remove("./mode_interactif.txt");
 	}
 	
 	return 0;
