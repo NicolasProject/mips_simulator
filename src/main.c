@@ -83,6 +83,9 @@ int main(int argc,char*args[])
 	
 	else if(argc == 1){		// S'il n'y a qu'un argument : mode interactif
 	
+		printf("\nMode interactif: à tout moment vous pouvez entrer la commande 'print_reg' suivie du numero de registre pour afficher sa \n");
+		printf("valeur, ou la commande 'print_mem' suivie d'une adresse pour afficher le contenu de la mémoire à cette adresse\n\n");
+		
 		do{
 				printf("entrez une instruction :\n");		// L'utilisateur doit entrer une instruction
 				fgets(chaine, sizeof(chaine), stdin);		// On la récupère dans la chaine de caractère "chaine"
