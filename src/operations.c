@@ -200,7 +200,7 @@ void beq(int reg1,int reg2,int offset)
 {
 	//	printf("PC before BEQ : %d\n",pc);
 	
-	printf("offset: %i\n",offset);
+	//printf("offset: %i\n",offset);
 	if(reg_file[reg1].val==reg_file[reg2].val)
 		pc= pc + offset;
 	else

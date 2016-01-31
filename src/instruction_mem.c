@@ -439,16 +439,27 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	char chaine[25];
 	int sortieBoucle = 0;
 	int quitter =0;
+	int temp=-1;
 	
 	pc = 0;			// Starts with the program counter at zero
 	
 	while(pc<=fin)	// Tant que pc n'a pas atteint sa valeur max
 	{
 		//printf("pc=%d\n",pc);
-		printf("\nInstruction %i : %s (hexa: 0x%s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);		// On affiche l'instruction et sa valeur en hexa
-		decode(im->mem[pc].cod,dm);																	// On decode et execute l'instruction
-		afficher_registres();																		// On affiche le contenu des registres
 		
+		if(modePas_A_Pas == 2){
+			if(pc>temp){
+			printf("Instruction %i : %s (hexa: 0x%s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);		// On affiche l'instruction et sa valeur en hexa
+			temp = pc;
+			}
+			decode(im->mem[pc].cod,dm);																	// On decode et execute l'instruction pour passer à la suivante
+			
+		}
+		else{
+			printf("\nInstruction %i : %s (hexa: 0x%s )\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);		// On affiche l'instruction et sa valeur en hexa
+			decode(im->mem[pc].cod,dm);																	// On decode et execute l'instruction
+			afficher_registres();																		// On affiche le contenu des registres
+		}
 		
 		if((modePas_A_Pas == 1) && (pc<=fin)){	// Si on est en mode pas a pas
 			
