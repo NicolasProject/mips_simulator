@@ -87,6 +87,7 @@ int main(int argc,char*args[])
 		printf("valeur, ou la commande 'print_mem' suivie d'une adresse pour afficher le contenu de la mémoire à cette adresse\n\n");
 		
 		do{
+			
 				printf("entrez une instruction :\n");		// L'utilisateur doit entrer une instruction
 				fgets(chaine, sizeof(chaine), stdin);		// On la récupère dans la chaine de caractère "chaine"
 				
@@ -132,6 +133,7 @@ int main(int argc,char*args[])
 					{
 						printf("problème lors de l'ouverture du fichier en écriture");
 					}
+					
 				}
 			
 		}while(sortieBoucle ==0);	// Tant que sortieBoucle =0 on refais la boucle. 

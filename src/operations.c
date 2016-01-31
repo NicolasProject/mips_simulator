@@ -119,7 +119,7 @@ void jr (unsigned int reg)
 
 void beq (unsigned int reg1,unsigned int reg2,int offset)
 {
-	printf("beq instruction offset: %i\n", offset);
+	//printf("beq instruction offset: %i\n", offset);
 	
 	if(reg_file[reg1].val==reg_file[reg2].val)
 		pc= pc + offset;

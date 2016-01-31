@@ -434,10 +434,6 @@ void execute(struct instruct_mem*im,int fin,struct data_mem*dm, int modePas_A_Pa
 	
 	while(pc<=fin)	// Tant que pc n'a pas atteint sa valeur max
 	{
-		//printf("pc = %d\n",pc);
-		printf("\nInstruction %i : %s (hexa: 0x%s)\n",pc, im->mem[pc].c, im->mem[pc].hexaStr);		// On affiche l'instruction et sa valeur en hexa
-		decode(im->mem[pc].cod,dm);																	// On decode et execute l'instruction
-		afficher_registres();																		// On affiche le contenu des registres
 		
 		if(modePas_A_Pas == 2){
 			if(pc>temp){
